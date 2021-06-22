@@ -14,7 +14,7 @@ class User(db.Model):
         self.username = username
         self.email = email
 
-class Referee(db.Model):
-    first_name = db.Column(db.String(128), nullable=False)
-    last_name = db.Column(db.String(128), nullable=False)
-    last_name = db.Column(db.String(128), nullable=False)
+# class Referee(db.Model):
+#     first_name = db.Column(db.String(128), nullable=False)
+#     last_name = db.Column(db.String(128), nullable=False)
+#     last_name = db.Column(db.String(128), nullable=False)

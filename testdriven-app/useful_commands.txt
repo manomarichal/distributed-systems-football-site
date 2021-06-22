@@ -1,8 +1,14 @@
 (build containers)
 sudo docker-compose -f docker-compose-dev.yml build
+
 (up to run container, -d to run in background)
-docker-compose -f docker-compose-dev.yml up -d
+sudo docker-compose -f docker-compose-dev.yml up -d
+
 (update container)
 sudo docker-compose -f docker-compose-dev.yml up -d --build
-(psql)
+
+(acces database through psql)
 sudo docker-compose -f docker-compose-dev.yml exec users-db psql -U postgres
+
+(run manage.py command)
+sudo docker-compose -f docker-compose-dev.yml run users python manage.py recreate-db

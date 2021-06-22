@@ -1,6 +1,21 @@
 version: '3.6'
 
 services:
+  user-interface:
+    build:
+      context: services/ui
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/ui:/usr/src/app'
+    ports:
+      - 5002:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+    depends_on:
+      - users-db
+      - users
+
   users:
     build:
       context: ./services/users
