@@ -1,0 +1,8 @@
+(build containers)
+sudo docker-compose -f docker-compose-dev.yml build
+(up to run container, -d to run in background)
+docker-compose -f docker-compose-dev.yml up -d
+(update container)
+sudo docker-compose -f docker-compose-dev.yml up -d --build
+(psql)
+sudo docker-compose -f docker-compose-dev.yml exec users-db psql -U postgres
