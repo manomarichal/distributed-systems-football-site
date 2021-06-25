@@ -1,0 +1,2 @@
+CREATE DATABASE teams_prod;
+CREATE DATABASE teams_dev;
