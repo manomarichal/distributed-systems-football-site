@@ -8,7 +8,7 @@ services:
     volumes:
       - './services/ui:/usr/src/app'
     ports:
-      - 5002:5000
+      - 5001:5000
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
@@ -23,7 +23,7 @@ services:
     volumes:
       - './services/users:/usr/src/app'
     ports:
-      - 5001:5000
+      - 5002:5000
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
@@ -37,6 +37,56 @@ services:
       dockerfile: Dockerfile
     ports:
     - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  teams:
+    build:
+      context: ./services/teams
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/teams:/usr/src/app'
+    ports:
+      - 5003:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:postgres@teams-db:5432/teams_dev
+    depends_on:
+      - teams-db
+
+  teams-db:
+    build:
+      context: ./services/teams/project/db
+      dockerfile: Dockerfile
+    ports:
+    - 5436:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  clubs:
+    build:
+      context: ./services/clubs
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/clubs:/usr/src/app'
+    ports:
+      - 5004:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:postgres@clubs-db:5432/clubs_dev
+    depends_on:
+      - clubs-db
+
+  clubs-db:
+    build:
+      context: ./services/clubs/project/db
+      dockerfile: Dockerfile
+    ports:
+    - 5437:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

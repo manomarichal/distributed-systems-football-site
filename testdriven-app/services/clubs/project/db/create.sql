@@ -1,0 +1,2 @@
+CREATE DATABASE clubs_prod;
+CREATE DATABASE clubs_dev;
