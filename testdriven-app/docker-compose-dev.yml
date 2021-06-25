@@ -90,3 +90,28 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+  referees:
+    build:
+      context: ./services/referees
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/referees:/usr/src/app'
+    ports:
+      - 5005:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:postgres@referees-db:5432/referees_dev
+    depends_on:
+      - referees-db
+
+  referees-db:
+    build:
+      context: ./services/referees/project/db
+      dockerfile: Dockerfile
+    ports:
+    - 5438:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

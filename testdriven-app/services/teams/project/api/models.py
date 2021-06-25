@@ -13,8 +13,3 @@ class Team(db.Model):
         self.stam_id = stam_id
         self.suffix = suffix
         self.colors = colors
-
-# class Referee(db.Model):
-#     first_name = db.Column(db.String(128), nullable=False)
-#     last_name = db.Column(db.String(128), nullable=False)
-#     last_name = db.Column(db.String(128), nullable=False)

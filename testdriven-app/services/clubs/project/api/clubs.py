@@ -3,7 +3,7 @@ from project.api.models import Club
 
 clubs_blueprint = Blueprint('clubs', __name__)
 
-@clubs_blueprint.route('/clubs/ping', methods=['GET'])
+@clubs_blueprint.route('/ping', methods=['GET'])
 def ping_pong():
     return jsonify({'status': 'success','message': 'pong!'})
 
@@ -12,7 +12,7 @@ def get_user_by_id(name):
     fail = {'status': 'fail',
             'message': 'Club does not exist'}
     try:
-        result = Club.query.filter_by(id=name).first()
+        result = Club.query.filter_by(name=name).first()
         if not result:
             return jsonify(fail), 404
         response = {

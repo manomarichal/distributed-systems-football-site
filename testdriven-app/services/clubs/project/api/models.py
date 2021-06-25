@@ -17,8 +17,3 @@ class Club(db.Model):
         self.zip_code = zip_code
         self.city = city
         self.website = website
-
-# class Referee(db.Model):
-#     first_name = db.Column(db.String(128), nullable=False)
-#     last_name = db.Column(db.String(128), nullable=False)
-#     last_name = db.Column(db.String(128), nullable=False)

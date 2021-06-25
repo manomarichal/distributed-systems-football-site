@@ -19,7 +19,6 @@ def add_teams_data():
             data = csv.reader(file)
             for row ,line in enumerate(data):
                 if row == 0: continue
-                print(line[2])
                 db.session.add(Team(id=line[0],
                                     stam_id=line[1],
                                     suffix=line[2],
