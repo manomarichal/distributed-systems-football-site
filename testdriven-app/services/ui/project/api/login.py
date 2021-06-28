@@ -3,10 +3,6 @@ import requests
 
 ui_login_blueprint = Blueprint('login', __name__, template_folder='./templates')
 
-@ui_login_blueprint.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({'status': 'success','message': 'pong!'})
-
 @ui_login_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     response = requests.get('http://localhost:5002/users/ping')

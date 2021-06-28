@@ -13,7 +13,13 @@ def create_app(script_info=None):
 
     # register blueprints
     from project.api.login import ui_login_blueprint
+    from project.api.misc import ui_misc_blueprint
+    from project.api.divisions import ui_divisions_blueprint
+    from project.api.teams import ui_teams_blueprint
     app.register_blueprint(ui_login_blueprint)
+    app.register_blueprint(ui_misc_blueprint)
+    app.register_blueprint(ui_divisions_blueprint)
+    app.register_blueprint(ui_teams_blueprint)
 
     @app.shell_context_processor
     def ctx():

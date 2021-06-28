@@ -1,29 +1,25 @@
 from flask import Blueprint, jsonify
 from project.api.models import Team
+import json
 
 teams_blueprint = Blueprint('teams', __name__)
 
-@teams_blueprint.route('/ping', methods=['GET'])
+@teams_blueprint.route('/teams/ping', methods=['GET'])
 def ping_pong():
     return jsonify({'status': 'success','message': 'pong!'})
 
 @teams_blueprint.route('/teams/<team_id>', methods=['GET'])
 def get_user_by_id(team_id):
-    fail = {'status': 'fail',
-            'message': 'Team does not exist'}
+    fail = {'status': 'fail','message': 'Team does not exist'}
     try:
         result = Team.query.filter_by(id=team_id).first()
         if not result:
             return jsonify(fail), 404
-        response = {
-            'status': 'succes',
-            'data': {
-                'id': result.id,
-                'stam_id': result.stam_id,
-                'suffix': result.suffix,
-                'colors': result.colors,
-            }
-        }
-        return jsonify(response), 200
+        return json.dumps(result.to_dict())
     except ValueError:
         return jsonify(fail), 404
+
+@teams_blueprint.route('/teams/all', methods=['GET'])
+def get_all_teams():
+    result = Team.query.all()
+    return json.dumps([row.to_dict() for row in result]), 200

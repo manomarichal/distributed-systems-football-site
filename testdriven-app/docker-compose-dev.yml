@@ -1,7 +1,17 @@
 version: '3.6'
 
 services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ./services/nginx
+      dockerfile: ./Dockerfile-dev
+    restart: always
+    ports:
+      - 80:80
+
   user-interface:
+    container_name: ui
     build:
       context: services/ui
       dockerfile: Dockerfile-dev
@@ -17,6 +27,7 @@ services:
       - users
 
   users:
+    container_name: users
     build:
       context: ./services/users
       dockerfile: Dockerfile-dev
@@ -32,6 +43,7 @@ services:
       - users-db
 
   users-db:
+    container_name: users-db
     build:
       context: ./services/users/project/db
       dockerfile: Dockerfile
@@ -42,6 +54,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   teams:
+    container_name: teams
     build:
       context: ./services/teams
       dockerfile: Dockerfile-dev
@@ -57,6 +70,7 @@ services:
       - teams-db
 
   teams-db:
+    container_name: teams-db
     build:
       context: ./services/teams/project/db
       dockerfile: Dockerfile
@@ -67,8 +81,9 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   clubs:
+    container_name: clubs
     build:
-      context: ./services/clubs
+      context: services/clubs
       dockerfile: Dockerfile-dev
     volumes:
       - './services/clubs:/usr/src/app'
@@ -82,8 +97,9 @@ services:
       - clubs-db
 
   clubs-db:
+    container_name: clubs-db
     build:
-      context: ./services/clubs/project/db
+      context: services/clubs/project/db
       dockerfile: Dockerfile
     ports:
     - 5437:5432
@@ -91,14 +107,42 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+  leagues:
+    container_name: leagues
+    build:
+      context: ./services/leagues
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/leagues:/usr/src/app'
+    ports:
+      - 5005:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:postgres@leagues-db:5432/leagues_dev
+    depends_on:
+      - leagues-db
+
+  leagues-db:
+    container_name: leagues-db
+    build:
+      context: ./services/leagues/project/db
+      dockerfile: Dockerfile
+    ports:
+    - 5439:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
   referees:
+    container_name: referees
     build:
       context: ./services/referees
       dockerfile: Dockerfile-dev
     volumes:
       - './services/referees:/usr/src/app'
     ports:
-      - 5005:5000
+      - 5006:5000
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
@@ -107,6 +151,7 @@ services:
       - referees-db
 
   referees-db:
+    container_name: referees-db
     build:
       context: ./services/referees/project/db
       dockerfile: Dockerfile

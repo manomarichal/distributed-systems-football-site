@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table class="table center">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Stam ID</th>
+        <th scope="col">Suffix</th>
+        <th scope="col">Colors</th>
+        <th scope="col">Link to team page</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for team in teams %}
+    <tr>
+        <th scope="row">{{ team.id }}</th>
+        <td>{{ team.stam_id }}</td>
+        {% if team.suffix != "" %}
+        <td> {{team.suffix}}</td>
+        {% else %}
+        <td> -</td>
+        {% endif %}
+        <td>{{team.colors}}</td>
+        <td><a class="nav-link" href="http://localhost:5001/teams/overview/{{team.id}}">link to page</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
