@@ -23,3 +23,8 @@ def get_user_by_id(team_id):
 def get_all_teams():
     result = Team.query.all()
     return json.dumps([row.to_dict() for row in result]), 200
+
+# @teams_blueprint.route('/teams/names', methods=['GET'])
+# def get_name_teams():
+#     result = Team.query.with_entities(Team.id, Team.col2)
+#     return json.dumps([row.to_dict() for row in result]), 200

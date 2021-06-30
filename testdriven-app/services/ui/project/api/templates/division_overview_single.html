@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<style type="text/css">
+    .bordered {
+        border: 2px solid #f5f5f5;
+        background: #f5f5f5;
+        padding: 5px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 60px;
+    }
+
+    .h2 {
+        font-size: 20px;
+    }
+
+    .table {
+        background: white;
+    }
+
+</style>
+<p class="h1"> Wedstrijden </p>
+{% for matchweek in matches_by_week %}
+{% if matches_by_week[matchweek]|length > 0 %}
+<div class="bordered">
+    <p class="h2"> Speeldag {{ matchweek }} </p>
+    <table class="table center">
+        <thead>
+        <tr style="background:#d9edf7">
+            <th scope="col">Datum</th>
+            <th scope="col">Uur</th>
+            <th scope="col">Thuisploeg</th>
+            <th scope="col">Uitploeg</th>
+            <th scope="col">Status</th>
+            <th scope="col">Uitslag</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for match in matches_by_week[matchweek] %}
+        <tr>
+            <td>{{ match.date }}</td>
+            <td>{{ match.time }}</td>
+            <td>{{ match.home_team_id }}</td>
+            <td>{{ match.away_team_id }}</td>
+            {% if match.status != None %}
+            <td> {{match.status}}</td>
+            {% else %}
+            <td> -</td>
+            {% endif %}
+            {% if match.goals_home_team != None and match.goals_away_team != None %}
+            <td>{{ match.goals_home_team }} - {{ match.goals_away_team }}</td>
+            {% else %}
+            <td> -</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+{% endif %}
+{% endfor %}
+
+{% endblock %}

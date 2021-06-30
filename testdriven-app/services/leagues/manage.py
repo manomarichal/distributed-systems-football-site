@@ -1,6 +1,6 @@
 from flask.cli import FlaskGroup
 from project import create_app, db
-from project.api.models import Match, Division
+from project.api.models import Match, Division, Status
 import csv
 
 app = create_app()  # new
@@ -15,7 +15,8 @@ def recreate_db():
 @cli.command()
 def add_matches_data():
     try:
-        files = ['data/matches_2018_2019.csv', 'data/matches_2019_2020.csv', 'data/matches_2020_2021.csv']
+        # files = ['data/matches_2018_2019.csv', 'data/matches_2019_2020.csv', 'data/matches_2020_2021.csv']
+        files = ['data/matches_2020_2021.csv']
         for filename in files:
             with open(filename, mode='r')as file:
                 data = csv.reader(file)
@@ -49,6 +50,19 @@ def add_divisions_data():
         db.session.rollback()
         print(repr(e))
 
+@cli.command()
+def add_status_data():
+    try:
+        with open('data/status.csv', mode='r')as file:
+            data = csv.reader(file)
+            for row ,line in enumerate(data):
+                if row == 0: continue
+                db.session.add(Status(id=line[0],
+                                    status_name=line[1]))
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(repr(e))
 
 
 if __name__ == '__main__':

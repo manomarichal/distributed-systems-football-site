@@ -2,6 +2,15 @@ from sqlalchemy.sql import func
 from project import db
 from sqlalchemy_serializer import SerializerMixin
 
+class Status(db.Model, SerializerMixin):
+    __tablename__ = 'status'
+    id = db.Column(db.Integer, primary_key=True)
+    status_name = db.Column(db.String(128), nullable=False)
+
+    def __init__(self, id, status_name):
+        self.id = id
+        self.status_name = status_name
+
 class Division(db.Model, SerializerMixin):
     __tablename__ = 'divisions'
     id = db.Column(db.Integer, primary_key=True)
