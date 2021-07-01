@@ -80,33 +80,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-  clubs:
-    container_name: clubs
-    build:
-      context: services/clubs
-      dockerfile: Dockerfile-dev
-    volumes:
-      - './services/clubs:/usr/src/app'
-    ports:
-      - 5004:5000
-    environment:
-      - FLASK_ENV=development
-      - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgresql://postgres:postgres@clubs-db:5432/clubs_dev
-    depends_on:
-      - clubs-db
-
-  clubs-db:
-    container_name: clubs-db
-    build:
-      context: services/clubs/project/db
-      dockerfile: Dockerfile
-    ports:
-    - 5437:5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-
   leagues:
     container_name: leagues
     build:

@@ -1,6 +1,6 @@
 from flask.cli import FlaskGroup
 from project import create_app, db
-from project.api.models import Team
+from project.api.models import Team, Club
 import csv
 
 app = create_app()  # new
@@ -28,7 +28,23 @@ def add_teams_data():
         db.session.rollback()
         print(repr(e))
 
-
+@cli.command()
+def add_clubs_data():
+    try:
+        with open('data/clubs.csv', mode='r')as file:
+            data = csv.reader(file)
+            for row ,line in enumerate(data):
+                if row == 0: continue
+                db.session.add(Club(stam_id=line[0],
+                                    name=line[1],
+                                    address=line[2],
+                                    zip_code=line[3],
+                                    city=line[4],
+                                    website=line[5]))
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(repr(e))
 
 if __name__ == '__main__':
     cli()

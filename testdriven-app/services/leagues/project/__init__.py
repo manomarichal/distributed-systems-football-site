@@ -16,8 +16,10 @@ def create_app(script_info=None):
     db.init_app(app)
 
     # register blueprints
-    from project.api.leagues import leagues_blueprint
-    app.register_blueprint(leagues_blueprint)
+    from project.api.matches import matches_blueprint
+    from project.api.divisions import divisions_blueprint
+    app.register_blueprint(matches_blueprint)
+    app.register_blueprint(divisions_blueprint)
 
     @app.shell_context_processor
     def ctx():

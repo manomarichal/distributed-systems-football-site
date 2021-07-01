@@ -1,28 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style type="text/css">
+    .bordered {
+        border: 2px solid #f5f5f5;
+        background: #f5f5f5;
+        padding: 5px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 50px;
+    }
+
+    .h2 {
+        font-size: 20px;
+    }
+
+    .table {
+        background: white;
+    }
+</style>
+<p class="h1"> Overzicht ploegen </p>
+<div class="bordered">
 <table class="table center">
     <thead>
-    <tr>
+    <tr style="background:#d9edf7">
         <th scope="col">#</th>
-        <th scope="col">Stam ID</th>
-        <th scope="col">Suffix</th>
-        <th scope="col">Colors</th>
-        <th scope="col">Link to team page</th>
+        <th scope="col">Club</th>
+        <th scope="col">Ploeg</th>
+        <th scope="col">Kleuren</th>
+        <th scope="col">Meer informatie</th>
     </tr>
     </thead>
     <tbody>
     {% for team in teams %}
     <tr>
         <th scope="row">{{ team.id }}</th>
-        <td>{{ team.stam_id }}</td>
+        <td>{{ extra_info[team.id]['club']}}</td>
         {% if team.suffix != "" %}
         <td> {{team.suffix}}</td>
         {% else %}
         <td> -</td>
         {% endif %}
         <td>{{team.colors}}</td>
-        <td><a class="nav-link" href="http://localhost:5001/teams/overview/{{team.id}}">link to page</a></td>
+        <td><a style="text-align:center;" href="http://localhost:5001/teams/overview/{{team.id}}">Pagina van {{extra_info[team.id]['full_name']}}</a></td>
     </tr>
     {% endfor %}
     </tbody>

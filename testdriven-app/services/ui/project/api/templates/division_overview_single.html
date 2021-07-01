@@ -15,7 +15,7 @@
         margin-top: 20px;
         margin-left: 100px;
         margin-right: 100px;
-        font-size: 60px;
+        font-size: 50px;
     }
 
     .h2 {
@@ -48,7 +48,7 @@
         {% for key, value in team_rankings %}
         <tr>
             <td>{{ counter.value }}</td>
-            <td>{{ key }}</td>
+            <td>{{ extra_info[key]['full_name'] }}</td>
             <td>{{ extra_info[key]['played'] }}</td>
             <td>{{ extra_info[key]['wun'] }}</td>
             <td>{{ extra_info[key]['lost'] }}</td>
@@ -76,6 +76,7 @@
             <th scope="col">Uitploeg</th>
             <th scope="col">Status</th>
             <th scope="col">Uitslag</th>
+            <th scope="col">Meer informatie</th>
         </tr>
         </thead>
         <tbody>
@@ -83,8 +84,8 @@
         <tr>
             <td>{{ match.date }}</td>
             <td>{{ match.time }}</td>
-            <td>{{ match.home_team_id }}</td>
-            <td>{{ match.away_team_id }}</td>
+            <td>{{ extra_info[match.home_team_id]['full_name'] }}</td>
+            <td>{{ extra_info[match.away_team_id]['full_name'] }}</td>
             {% if match.status != None %}
             <td> {{match.status}}</td>
             {% else %}
@@ -95,6 +96,7 @@
             {% else %}
             <td> -</td>
             {% endif %}
+            <td><a href="http://localhost:5001/matches/overview/{{match.id}}">Details wedstrijd</a></td>
         </tr>
         {% endfor %}
         </tbody>
@@ -103,5 +105,4 @@
 {% else %}
 {% endif %}
 {% endfor %}
-
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from project.api.models import Team
+from project.api.models import Team, Club
 import json
 
 teams_blueprint = Blueprint('teams', __name__)
@@ -10,21 +10,38 @@ def ping_pong():
 
 @teams_blueprint.route('/teams/<team_id>', methods=['GET'])
 def get_user_by_id(team_id):
-    fail = {'status': 'fail','message': 'Team does not exist'}
     try:
         result = Team.query.filter_by(id=team_id).first()
         if not result:
-            return jsonify(fail), 404
-        return json.dumps(result.to_dict())
+            return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
+        return json.dumps(result.to_dict()), 200
     except ValueError:
-        return jsonify(fail), 404
+        return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
 
-@teams_blueprint.route('/teams/all', methods=['GET'])
+@teams_blueprint.route('/teams/full-team-name/<team_id>', methods=['GET'])
+def get_team_name_by_id(team_id):
+    try:
+        team_object = Team.query.filter_by(id=team_id).first().to_dict()
+        club_object = Club.query.filter_by(stam_id=team_object['stam_id']).first().to_dict()
+        if not team_object:
+            return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
+        if not club_object:
+            return jsonify({'status': 'fail','message': 'Club does not exist'})
+        return json.dumps(club_object['name'] + ' ' + team_object['suffix']), 200
+    except ValueError:
+        return jsonify({'status': 'fail','message': 'Team or club does not exist'}), 404
+
+@teams_blueprint.route('/teams', methods=['GET'])
 def get_all_teams():
     result = Team.query.all()
     return json.dumps([row.to_dict() for row in result]), 200
 
-# @teams_blueprint.route('/teams/names', methods=['GET'])
-# def get_name_teams():
-#     result = Team.query.with_entities(Team.id, Team.col2)
-#     return json.dumps([row.to_dict() for row in result]), 200
+@teams_blueprint.route('/clubs/<stam_number>', methods=['GET'])
+def get_club_by_stam_number(stam_number):
+    try:
+        result = Club.query.filter_by(stam_id=stam_number).first()
+        if not result:
+            return jsonify({'status': 'fail','message': 'Club does not exist'}), 404
+        return json.dumps(result.to_dict()), 200
+    except ValueError:
+        return jsonify({'status': 'fail','message': 'Club does not exist'}), 404
