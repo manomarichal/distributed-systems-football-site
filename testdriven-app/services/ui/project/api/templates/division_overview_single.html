@@ -27,6 +27,41 @@
     }
 
 </style>
+<p class="h1"> Rangschikking </p>
+<div class="bordered">
+    <table class="table center">
+        <thead>
+        <tr style="background:#d9edf7">
+            <th scope="col">Rang</th>
+            <th scope="col">Teamnaam</th>
+            <th scope="col">Gesp</th>
+            <th scope="col">Gew</th>
+            <th scope="col">Ver</th>
+            <th scope="col">Gel</th>
+            <th scope="col">DV</th>
+            <th scope="col">DT</th>
+            <th scope="col">PT</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set counter = namespace(value=1)%}
+        {% for key, value in team_rankings %}
+        <tr>
+            <td>{{ counter.value }}</td>
+            <td>{{ key }}</td>
+            <td>{{ extra_info[key]['played'] }}</td>
+            <td>{{ extra_info[key]['wun'] }}</td>
+            <td>{{ extra_info[key]['lost'] }}</td>
+            <td>{{ extra_info[key]['equal'] }}</td>
+            <td>{{ extra_info[key]['goals_for'] }}</td>
+            <td>{{ extra_info[key]['goals_against'] }}</td>
+            <td>{{ value }}</td>
+        </tr>
+        {% set counter.value = counter.value + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 <p class="h1"> Wedstrijden </p>
 {% for matchweek in matches_by_week %}
 {% if matches_by_week[matchweek]|length > 0 %}
