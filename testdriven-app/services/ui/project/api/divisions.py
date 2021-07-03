@@ -3,57 +3,29 @@ import requests
 
 ui_divisions_blueprint = Blueprint('divisions', __name__, template_folder='./templates')
 
+
 # TODO navbar dropdown menu
 # TODO when two teams have the same amount of points you need to look at which team has a higher GD
-@ui_divisions_blueprint.route('/divisions/overview/<division_id>', methods=['GET'])
+@ui_divisions_blueprint.route('/divisions/overview/<division_id>', methods=['GET', 'POST'])
 def show_team_overview(division_id):
-    division = requests.get(f'http://leagues:5000/divisions/{division_id}').json()
-    matches_by_week = dict()
-    extra_info = dict()  # used to store information needed in the "Rangschikking" table
-    team_rankings = dict()  # used to store information needed in the "Rangschikking" table
-    stats = dict() # used to store information needed in the "Statistieken" table
-    for i in range(1, requests.get(f'http://leagues:5000/matches/matchweek/max').json()['max']):
-        # get matches from a matchweek within the division
-        matches = requests.get(f'http://leagues:5000/matches/division/{division_id}/matchweek/{i}').json()
-        matches_by_week[i] = matches
-        # calculate extra information needed
-        for match in matches:
-            team_id = match['home_team_id']
-            if team_id not in extra_info:
-                team_name_full = requests.get(f'http://teams:5000/teams/full-team-name/{team_id}').json()
-                extra_info[team_id] ={'full_name': team_name_full, 'played': 0, 'wun': 0, 'lost': 0, 'equal': 0, 'goals_for': 0, 'goals_against': 0}
-            # update extra info
-            if match['goals_home_team'] is not None:
-                extra_info[team_id]['played'] += 1
-            else:
-                continue  # match is not played yet
-            if match['goals_home_team'] > match['goals_away_team']:
-                extra_info[team_id]['wun'] += 1
-            elif match['goals_home_team'] < match['goals_away_team']:
-                extra_info[team_id]['lost'] += 1
-            else:
-                extra_info[team_id]['equal'] += 1
-            extra_info[team_id]['goals_for'] += match['goals_home_team']
-            extra_info[team_id]['goals_against'] += match['goals_away_team']
-            # add points
-            team_rankings.setdefault(team_id, 0)
-            if match['goals_home_team'] > match['goals_away_team']:
-                team_rankings[team_id] += 3  # home team wins
-            elif match['goals_home_team'] == match['goals_away_team']:
-                team_rankings[team_id] += 1  # equal
-    # calculate team rankings
-    team_rankings = sorted(team_rankings.items(), key=lambda x: x[1], reverse=True)
+    division = requests.get("http://leagues:5000/divisions/%s"%division_id).json()
+    full_names = requests.get("http://teams:5000/teams/full-names").json()
 
-    # statistics
+    matches_by_week = requests.get("http://leagues:5000/matches/division/%s/per-week"%division_id).json()
+    statistics = requests.get("http://leagues:5000/matches/division/%s/statistics"%division_id).json()
+
     best_attack = requests.get(f'http://leagues:5000/matches/division/{division_id}/best-attack').json()
     best_defense = requests.get(f'http://leagues:5000/matches/division/{division_id}/best-defense').json()
     most_clean_sheets = requests.get(f'http://leagues:5000/matches/division/{division_id}/most-clean-sheets').json()
-    best_attack['team'] = requests.get('http://teams:5000/teams/full-team-name/%d'%best_attack['team']).json()
-    best_defense['team'] = requests.get('http://teams:5000/teams/full-team-name/%d'%best_defense['team']).json()
-    most_clean_sheets['team'] = requests.get('http://teams:5000/teams/full-team-name/%d'%most_clean_sheets['team']).json()
+
+    team_points = requests.get("http://leagues:5000/matches/division/%s/team-points"%division_id).json()
+    team_rankings = sorted(team_points.items(), key=lambda x: x[1], reverse=True)
 
     return render_template("division_overview_single.html", division=division, matches_by_week=matches_by_week,
-                           team_rankings=team_rankings, extra_info=extra_info, best_attack=best_attack, best_defense=best_defense, most_clean_sheets=most_clean_sheets)
+                           full_names=full_names,
+                           team_rankings=team_rankings, statistics=statistics, best_attack=best_attack,
+                           best_defense=best_defense, most_clean_sheets=most_clean_sheets)
+
 
 @ui_divisions_blueprint.route('/divisions/overview', methods=['GET'])
 def show_all_teams():

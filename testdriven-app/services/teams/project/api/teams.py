@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
 from project.api.models import Team, Club
+from project import db
 import json
 
 teams_blueprint = Blueprint('teams', __name__)
@@ -30,6 +31,14 @@ def get_team_name_by_id(team_id):
         return json.dumps(club_object['name'] + ' ' + team_object['suffix']), 200
     except ValueError:
         return jsonify({'status': 'fail','message': 'Team or club does not exist'}), 404
+
+@teams_blueprint.route('/teams/full-names', methods=['GET'])
+def get_all_team_names():
+    names = dict()
+    teams = Team.query.all()
+    for team in teams:
+        names[team.id] = db.session.query(Club).filter_by(stam_id=team.stam_id).first().name + ' ' + team.suffix
+    return jsonify(names), 200
 
 @teams_blueprint.route('/teams', methods=['GET'])
 def get_all_teams():
