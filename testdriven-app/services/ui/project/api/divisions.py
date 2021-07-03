@@ -11,6 +11,7 @@ def show_team_overview(division_id):
     matches_by_week = dict()
     extra_info = dict()  # used to store information needed in the "Rangschikking" table
     team_rankings = dict()  # used to store information needed in the "Rangschikking" table
+    stats = dict() # used to store information needed in the "Statistieken" table
     for i in range(1, requests.get(f'http://leagues:5000/matches/matchweek/max').json()['max']):
         # get matches from a matchweek within the division
         matches = requests.get(f'http://leagues:5000/matches/division/{division_id}/matchweek/{i}').json()
@@ -43,8 +44,16 @@ def show_team_overview(division_id):
     # calculate team rankings
     team_rankings = sorted(team_rankings.items(), key=lambda x: x[1], reverse=True)
 
+    # statistics
+    best_attack = requests.get(f'http://leagues:5000/matches/division/{division_id}/best-attack').json()
+    best_defense = requests.get(f'http://leagues:5000/matches/division/{division_id}/best-defense').json()
+    most_clean_sheets = requests.get(f'http://leagues:5000/matches/division/{division_id}/most-clean-sheets').json()
+    best_attack['team'] = requests.get('http://teams:5000/teams/full-team-name/%d'%best_attack['team']).json()
+    best_defense['team'] = requests.get('http://teams:5000/teams/full-team-name/%d'%best_defense['team']).json()
+    most_clean_sheets['team'] = requests.get('http://teams:5000/teams/full-team-name/%d'%most_clean_sheets['team']).json()
+
     return render_template("division_overview_single.html", division=division, matches_by_week=matches_by_week,
-                           team_rankings=team_rankings, extra_info=extra_info)
+                           team_rankings=team_rankings, extra_info=extra_info, best_attack=best_attack, best_defense=best_defense, most_clean_sheets=most_clean_sheets)
 
 @ui_divisions_blueprint.route('/divisions/overview', methods=['GET'])
 def show_all_teams():

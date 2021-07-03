@@ -32,6 +32,31 @@
     <table class="table center">
         <thead>
         <tr style="background:#d9edf7">
+            <th scope="col">Beste aanval</th>
+            <th scope="col">Beste verdediging</th>
+            <th scope="col">Meeste schone leien</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                {{ best_attack['team'] }} met {{ best_attack['goals']}}
+                {% if best_attack['goals'] == 1%} goal {% else %} goals {% endif %}
+            </td>
+            <td>
+                {{ best_defense['team'] }} met {{ best_defense['goals']}}
+                {% if best_defense['goals'] == 1%} tegengoal {% else %} tegengoals {% endif %}
+            </td>
+            <td>
+                {{ most_clean_sheets['team'] }} met {{ most_clean_sheets['nr_of_clean_sheets']}}
+                {% if most_clean_sheets['nr_of_clean_sheets'] == 1%} schone lei {% else %} schone leien {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="table center">
+        <thead>
+        <tr style="background:#d9edf7">
             <th scope="col">Rang</th>
             <th scope="col">Teamnaam</th>
             <th scope="col">Gesp</th>

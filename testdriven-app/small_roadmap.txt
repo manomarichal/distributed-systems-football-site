@@ -1,0 +1,8 @@
+- filter for matchweeks on per division table 2
+- team page 3
+- make match functions client side (calculate team rankings en extra info dict)
+
+- page for a specific fixture 5
+- login per team + portal for editing scores 5
+- admin inteface 10
+
