@@ -1,5 +1,4 @@
 - filter for matchweeks on per division table 2
-- make match functions client side (calculate team rankings en extra info dict)
 
 - team page 3
 - page for a specific fixture 5

@@ -1,7 +1,9 @@
+import datetime
+
 from flask import Blueprint, jsonify, request
 from project.api.models import Match
 from project import db
-from sqlalchemy import func
+from sqlalchemy import func, and_
 import json
 
 matches_blueprint = Blueprint('matches', __name__)
@@ -59,10 +61,32 @@ def get_team_with_most_clean_sheets(division_id):
     max_key = max(score_dict, key=score_dict.get)
     return json.dumps({'team' : str(max_key), 'nr_of_clean_sheets': score_dict[max_key]})
 
-@matches_blueprint.route('/matches/home-team/recent', methods=['GET'])
-def get_upcoming_matches_for_team():
-    maximum = db.session.query(func.max(Match.matchweek)).scalar()
-    return jsonify({'max': maximum}), 200
+@matches_blueprint.route('/matches/home-team/<team_id>/recent', methods=['GET'])
+def get_upcoming_matches_for_team(team_id):
+    # find the three most recent matches for a home team id
+    matches = Match.query.filter(and_(Match.home_team_id==team_id, Match.goals_home_team!=None)).all()
+    recent_matches = matches[0:3]
+    for match in matches:
+        # find the currently least recent match from the three most recent matches
+        smallest = 0
+        for i in range(3):
+            recent_match_date = datetime.datetime.combine(recent_matches[i].date, recent_matches[i].time)
+            if recent_match_date > datetime.datetime.combine(recent_matches[smallest].date, recent_matches[smallest].time):
+                smallest = i
+        # check if this match is smaller, if so replace it
+        if datetime.datetime.combine(match.date, match.time) > datetime.datetime.combine(recent_matches[smallest].date, recent_matches[smallest].time):
+            recent_matches[smallest] = match
+    return json.dumps([row.to_dict() for row in recent_matches])
+
+@matches_blueprint.route('/matches/home-team/<team_id>', methods=['GET'])
+def get_matches_for_home_team(team_id):
+    matches = Match.query.filter_by(home_team_id=team_id)
+    return json.dumps([row.to_dict() for row in matches])
+
+@matches_blueprint.route('/matches/home-team/<team_id>/upcoming', methods=['GET'])
+def get_upcoming_matches_for_home_team(team_id):
+    matches = Match.query.filter_by(home_team_id=team_id, goals_home_team=None)
+    return json.dumps([row.to_dict() for row in matches])
 
 @matches_blueprint.route('/matches/division/<division_id>/per-week', methods=['GET'])
 def get_matches_per_week_for_division(division_id):
