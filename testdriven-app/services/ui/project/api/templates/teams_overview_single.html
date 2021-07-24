@@ -31,7 +31,7 @@
     }
 
 </style>
-<p class="h1">{{extra_info["full_name"]}}</p>
+<p class="h1" style="text-align: center">{{extra_info["full_name"]}}</p>
 <div class="row whitebordered">
     <div class="col-xs-6 bordered">
         <p class="h2" style="text-align: center">Extra informatie</p>
@@ -59,9 +59,9 @@
         <table class="table center">
             <thead>
             <tr style="background:#d9edf7">
+                <th scope="col">Tegenstander</th>
                 <th scope="col">Datum</th>
                 <th scope="col">Uur</th>
-                <th scope="col">Tegenstander</th>
                 <th scope="col">Uitslag</th>
                 <th scope="col">Meer informatie</th>
             </tr>
@@ -69,9 +69,9 @@
             <tbody>
             {% for match in recent_matches %}
             <tr>
+                <td>{{ full_names[match.away_team_id|string] }}</td>
                 <td>{{ match.date }}</td>
                 <td>{{ match.time }}</td>
-                <td>{{ full_names[match.away_team_id|string] }}</td>
                 {% if match.goals_home_team != None and match.goals_away_team != None %}
                 <td>{{ match.goals_home_team }} - {{ match.goals_away_team }}</td>
                 {% else %}
@@ -88,18 +88,18 @@
         <table class="table center" style="float: left">
             <thead>
             <tr style="background:#d9edf7">
+                <th scope="col">Tegenstander</th>
                 <th scope="col">Datum</th>
                 <th scope="col">Uur</th>
-                <th scope="col">Tegenstander</th>
                 <th scope="col">Meer informatie</th>
             </tr>
             </thead>
             <tbody>
             {% for match in upcoming_matches %}
             <tr>
+                <td>{{ full_names[match.away_team_id|string] }}</td>
                 <td>{{ match.date }}</td>
                 <td>{{ match.time }}</td>
-                <td>{{ full_names[match.away_team_id|string] }}</td>
                 <td><a href="http://localhost:5001/matches/overview/{{match.id}}">Details wedstrijd</a></td>
             </tr>
             {% endfor %}
@@ -108,8 +108,4 @@
     </div>
 </div>
 {% endblock %}
-<div class="row">
-    <div class="col-xs-6">div 1</div>
-    <div class="col-xs-6">div 2</div>
-</div>
 

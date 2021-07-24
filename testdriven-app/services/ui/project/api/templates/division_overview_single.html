@@ -88,6 +88,16 @@
     </table>
 </div>
 <p class="h1"> Wedstrijden </p>
+<label for="teamFilter"></label><input type="text" style="margin-left: 100px;" id="teamFilter" list="teams"
+                                       onkeydown="filterByTeam(event)" placeholder="Filter op team..">
+<form class="js-form" style="margin-left: 100px;">
+    <input type="text" name="myText" placeholder="Filter op team..">
+</form>
+<datalist id="teams">
+    {% for id in full_names %}
+    <option value="{{full_names[id]}}">
+        {% endfor %}
+</datalist>
 {% set counter = namespace(value=0)%}
 {% for matchweek in matches_by_week %}
 {% if matches_by_week[matchweek]|length > 0 %}
@@ -134,4 +144,32 @@
 {% else %}
 {% endif %}
 {% endfor %}
+<script>
+    function filterByTeam(event) {
+        if (event.key === "Enter") {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("teamFilter").value.replace(/\s/g, '');
+            tr = document.getElementsByTagName("tr");
+            console.log(input)
+            for (i = 0; i < tr.length; i++) {
+                home_team = tr[i].getElementsByTagName("td")[2];
+                away_team = tr[i].getElementsByTagName("td")[3];
+                if (home_team && away_team) {
+                    home_team_text = home_team.textContent.replace(/\s/g, '');
+                    away_team_text = away_team.textContent.replace(/\s/g, '');
+                    console.log(txtValue)
+                    if (home_team_text === input || away_team_text === input || input === "") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        } else {
+            return false;
+        }
+
+
+    }
+</script>
 {% endblock %}

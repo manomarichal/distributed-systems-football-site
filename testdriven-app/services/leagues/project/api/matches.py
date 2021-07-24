@@ -65,13 +65,14 @@ def get_team_with_most_clean_sheets(division_id):
 def get_upcoming_matches_for_team(team_id):
     # find the three most recent matches for a home team id
     matches = Match.query.filter(and_(Match.home_team_id==team_id, Match.goals_home_team!=None)).all()
+
     recent_matches = matches[0:3]
-    for match in matches:
+    for match in matches[3:]:
         # find the currently least recent match from the three most recent matches
         smallest = 0
         for i in range(3):
             recent_match_date = datetime.datetime.combine(recent_matches[i].date, recent_matches[i].time)
-            if recent_match_date > datetime.datetime.combine(recent_matches[smallest].date, recent_matches[smallest].time):
+            if recent_match_date < datetime.datetime.combine(recent_matches[smallest].date, recent_matches[smallest].time):
                 smallest = i
         # check if this match is smaller, if so replace it
         if datetime.datetime.combine(match.date, match.time) > datetime.datetime.combine(recent_matches[smallest].date, recent_matches[smallest].time):

@@ -1,6 +1,4 @@
 - filter for matchweeks on per division table 2
-
-- team page 3
 - page for a specific fixture 5
 - login per team + portal for editing scores 5
 - admin inteface 10
