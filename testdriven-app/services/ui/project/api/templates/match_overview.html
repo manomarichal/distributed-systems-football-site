@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+    .bordered {
+        border: 2px solid #f5f5f5;
+        background: #f5f5f5;
+        padding: 5px;
+    }
+
+    .whitebordered {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 50px;
+    }
+
+    .h2 {
+        font-size: 20px;
+    }
+
+    .table {
+        background: white;
+    }
+
+</style>
+<p class="h1" style="text-align: center">{{full_names[match["home_team_id"]|string]}} vs {{full_names[match["away_team_id"]|string]}}</p>
+<div class="row whitebordered">
+    <div class="col-xs-6 bordered">
+        <p class="h2" style="text-align: center">Informatie</p>
+        <table class="table center">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col">Datum kick-off</th>
+                <th scope="col">Tijd kick-off</th>
+                <th scope="col">Scheidsrechter</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{match["date"]}}</td>
+                <td>{{match["time"]}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="h2" style="text-align: center">Recent gespeelde wedstrijden</p>
+        <table class="table center">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col">Tegenstander</th>
+                <th scope="col">Datum</th>
+                <th scope="col">Uur</th>
+                <th scope="col">Uitslag</th>
+                <th scope="col">Meer informatie</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+        <div class="col-xs-6 bordered">
+        <p class="h2" style="text-align: center">Opkomende wedstrijden</p>
+        <table class="table center" style="float: left">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col">Tegenstander</th>
+                <th scope="col">Datum</th>
+                <th scope="col">Uur</th>
+                <th scope="col">Meer informatie</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

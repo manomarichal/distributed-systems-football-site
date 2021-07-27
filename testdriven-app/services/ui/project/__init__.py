@@ -16,10 +16,12 @@ def create_app(script_info=None):
     from project.api.misc import ui_misc_blueprint
     from project.api.divisions import ui_divisions_blueprint
     from project.api.teams import ui_teams_blueprint
+    from project.api.matches import ui_matches_blueprint
     app.register_blueprint(ui_login_blueprint)
     app.register_blueprint(ui_misc_blueprint)
     app.register_blueprint(ui_divisions_blueprint)
     app.register_blueprint(ui_teams_blueprint)
+    app.register_blueprint(ui_matches_blueprint)
 
     @app.shell_context_processor
     def ctx():

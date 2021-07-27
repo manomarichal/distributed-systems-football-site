@@ -6,6 +6,7 @@ ui_divisions_blueprint = Blueprint('divisions', __name__, template_folder='./tem
 
 # TODO navbar dropdown menu
 # TODO when two teams have the same amount of points you need to look at which team has a higher GD
+# TODO status is now a number, should be full status
 @ui_divisions_blueprint.route('/divisions/overview/<division_id>', methods=['GET', 'POST'])
 def show_team_overview(division_id):
     """"Page giving the league table, some statistics and upcoming fixtures for a given division"""
