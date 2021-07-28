@@ -8,13 +8,6 @@
         padding: 5px;
     }
 
-    .whitebordered {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        margin-left: 100px;
-        margin-right: 100px;
-    }
-
     .h1 {
         margin-top: 20px;
         margin-left: 100px;
@@ -31,13 +24,15 @@
     }
 
 </style>
-<p class="h1" style="text-align: center">{{full_names[match["home_team_id"]|string]}} vs {{full_names[match["away_team_id"]|string]}}</p>
-<div class="row whitebordered">
-    <div class="col-xs-6 bordered">
+<p class="h1" style="text-align: center">{{full_names[match["home_team_id"]|string]}} vs
+    {{full_names[match["away_team_id"]|string]}}</p>
+
+<div class="row" style="padding-left: 15%; padding-right: 15%">
+    <div class="col bordered mx-auto">
         <p class="h2" style="text-align: center">Informatie</p>
         <table class="table center">
             <thead>
-            <tr style="background:#d9edf7">
+            <tr style="background:#d9edf7; text-align: center;">
                 <th scope="col">Datum kick-off</th>
                 <th scope="col">Tijd kick-off</th>
                 <th scope="col">Scheidsrechter</th>
@@ -45,37 +40,90 @@
             </thead>
             <tbody>
             <tr>
-                <td>{{match["date"]}}</td>
-                <td>{{match["time"]}}</td>
+                <td style="text-align: center">{{match["date"]}}</td>
+                <td style="text-align: center">{{match["time"]}}</td>
             </tr>
             </tbody>
         </table>
-        <p class="h2" style="text-align: center">Recent gespeelde wedstrijden</p>
+        {% if match.goals_home_team == None %}
+        <p class="h2" style="text-align: center">Vorige wedstrijden</p>
         <table class="table center">
             <thead>
-            <tr style="background:#d9edf7">
-                <th scope="col">Tegenstander</th>
+            <tr style="background:#d9edf7; text-align: center;">
                 <th scope="col">Datum</th>
-                <th scope="col">Uur</th>
-                <th scope="col">Uitslag</th>
-                <th scope="col">Meer informatie</th>
+                <th scope="col">{{ full_names[match.home_team_id|string] }}</th>
+                <th scope="col">{{ full_names[match.away_team_id|string] }}</th>
+                <th scope="col">Meer info</th>
             </tr>
             </thead>
             <tbody>
+            {% for prev_match in prev_matches %}
+            <tr style="text-align: center">
+                <td>{{ match.date }}</td>
+                {% if match.home_team_id == prev_match.home_team_id %}
+                <td>{{ prev_match.goals_home_team }}</td> {% else %} <td>{{ prev_match.goals_away_team }}</td>
+                {% endif %}
+                {% if match.away_team_id == prev_match.home_team_id %}
+                <td>{{ prev_match.goals_home_team }}</td> {% else %} <td>{{ prev_match.goals_away_team }}</td>
+                {% endif %}
+                <td><a href="http://localhost:5001/matches/overview/{{match.id}}">Details wedstrijd</a></td>
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
-    </div>
-        <div class="col-xs-6 bordered">
-        <p class="h2" style="text-align: center">Opkomende wedstrijden</p>
-        <table class="table center" style="float: left">
+        {% else %}
+        <p class="h2" style="text-align: center">Uitslag</p>
+        <table class="table center">
             <thead>
-            <tr style="background:#d9edf7">
-                <th scope="col">Tegenstander</th>
-                <th scope="col">Datum</th>
-                <th scope="col">Uur</th>
-                <th scope="col">Meer informatie</th>
+            <tr style="background:#d9edf7; text-align: center;">
+                <th scope="col">{{ full_names[match.home_team_id|string] }}</th>
+                <th scope="col">{{ full_names[match.away_team_id|string] }}</th>
             </tr>
             </thead>
+            <tbody>
+            <tr style="text-align: center">
+                <td>{{match.goals_home_team}}</td>
+                <td>{{match.goals_away_team}}</td>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+    <div class="col bordered mx-auto">
+        <p class="h2" style="text-align: center">Historiek</p>
+        <table class="table center">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col"></th>
+                <th scope="col">{{full_names[match["home_team_id"]|string]}}</th>
+                <th scope="col">{{full_names[match["away_team_id"]|string]}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>Gespeeld</strong></td>
+                <td colspan="2" style="text-align: center">{{statistics["count"]}}</td>
+            </tr>
+            <tr>
+                <td><strong>Gewonnen</strong></td>
+                <td style="text-align: center">{{statistics["wins_1"]}}</td>
+                <td style="text-align: center">{{statistics["wins_2"]}}</td>
+            </tr>
+            <tr>
+                <td><strong>Verloren</strong></td>
+                <td style="text-align: center">{{statistics["count"] - statistics["wins_1"]}}</td>
+                <td style="text-align: center">{{statistics["count"] - statistics["wins_2"]}}</td>
+            </tr>
+            <tr>
+                <td><strong>Gelijk</strong></td>
+                <td colspan="2" style="text-align: center">{{statistics["equal"]}}</td>
+            </tr>
+            <tr>
+                <td><strong>Vorm</strong></td>
+                <td style="text-align: center">{{home_team_track_record}}</td>
+                <td style="text-align: center">{{away_team_track_record}}</td>
+            </tr>
+            </tbody>
         </table>
     </div>
 </div>

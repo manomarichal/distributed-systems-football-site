@@ -1,4 +1,6 @@
-- page for a specific fixture 5
-- login per team + portal for editing scores 5
-- admin inteface 10
-- increase site speed 2, todos
+- weather stuff
+- login per team + portal for editing scores
+- admin inteface
+- increase site speed
+- all todos
+- nginx fixen

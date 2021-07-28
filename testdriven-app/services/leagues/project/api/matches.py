@@ -160,13 +160,13 @@ def get_team_track_record(team_id):
     return track_record
 
 
-@matches_blueprint.route('/matches/<team_1_id>/vs/<team_2_id>', methods=['GET'])
+@matches_blueprint.route('/matches/statistics/<team_1_id>/vs/<team_2_id>', methods=['GET'])
 def get_head_to_head_statistics(team_1_id, team_2_id):
     matches = db.session.query(Match).filter(and_(or_(
         and_(Match.home_team_id == team_1_id, Match.away_team_id == team_2_id), and_(
             Match.home_team_id == team_2_id, Match.away_team_id == team_1_id))),
             Match.goals_home_team != None)
-    stats = {'count': 0, 'wins_1': 0, 'wins_2': 0, 'equal': 0, 'scores': []}
+    stats = {'count': 0, 'wins_1': 0, 'wins_2': 0, 'equal': 0}
 
     for match in matches:
         stats['count'] += 1
@@ -180,16 +180,17 @@ def get_head_to_head_statistics(team_1_id, team_2_id):
                 stats['wins_2'] += 1
             else:
                 stats['wins_1'] += 1
-
         else:
             stats['equal'] += 1
-
-    for match in sort_matches(matches)[-3:]:
-        stats['scores'] += [match["goals_home_team"], match["goals_away_team"]]
-
-    # return json.dumps([row.to_dict() for row in matches])
     return json.dumps(stats)
 
+@matches_blueprint.route('/matches/<team_1_id>/vs/<team_2_id>', methods=['GET'])
+def get_recent_matches_two_teams(team_1_id, team_2_id):
+    matches = db.session.query(Match).filter(and_(or_(
+        and_(Match.home_team_id == team_1_id, Match.away_team_id == team_2_id), and_(
+            Match.home_team_id == team_2_id, Match.away_team_id == team_1_id))),
+            Match.goals_home_team != None)
+    return json.dumps(sort_matches(matches)[-3:])
 
 @matches_blueprint.route('/matches/division/<division_id>/statistics', methods=['GET'])
 def get_division_statistics(division_id):
