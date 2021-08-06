@@ -22,6 +22,7 @@ def create_app(script_info=None):
     app.register_blueprint(ui_divisions_blueprint)
     app.register_blueprint(ui_teams_blueprint)
     app.register_blueprint(ui_matches_blueprint)
+    app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
     @app.shell_context_processor
     def ctx():

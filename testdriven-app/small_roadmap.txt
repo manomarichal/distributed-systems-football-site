@@ -4,3 +4,4 @@
 - increase site speed
 - all todos
 - nginx fixen
+- vertalen

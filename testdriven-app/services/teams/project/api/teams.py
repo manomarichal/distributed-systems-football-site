@@ -10,12 +10,24 @@ def ping_pong():
     return jsonify({'status': 'success','message': 'pong!'})
 
 @teams_blueprint.route('/teams/<team_id>', methods=['GET'])
-def get_user_by_id(team_id):
+def get_team_info(team_id):
     try:
         result = Team.query.filter_by(id=team_id).first()
         if not result:
             return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
         return json.dumps(result.to_dict()), 200
+    except ValueError:
+        return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
+
+@teams_blueprint.route('/teams/address/<team_id>', methods=['GET'])
+def get_team_adress(team_id):
+    try:
+        team = Team.query.filter_by(id=team_id).first()
+        if not team:
+            return jsonify({'status': 'fail', 'message': 'Team does not exist'}), 404
+
+        club = Club.query.filter_by(stam_id=team.stam_id).first()
+        return jsonify({'city': club.city, 'zip_code': club.zip_code, 'address': club.address}), 404
     except ValueError:
         return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
 
