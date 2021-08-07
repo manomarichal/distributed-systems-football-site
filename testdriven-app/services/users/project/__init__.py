@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_login import LoginManager
 import os
 
 # instantiate db
@@ -12,6 +12,7 @@ def create_app(script_info=None):
     # set config
     app_settings = os.getenv('APP_SETTINGS')
     app.config.from_object(app_settings)
+    login = LoginManager(app)
 
     db.init_app(app)
 

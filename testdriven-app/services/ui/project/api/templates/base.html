@@ -60,21 +60,32 @@
             <li class="nav-item">
                 <a class="nav-link" href="http://localhost:5001/divisions/overview/5">5de afdeling</a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="true">
-                    Competitie
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="http://localhost:5001/divisions/overview/1">1ste afdeling</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                </div>
-            </li>
+<!--            <li class="nav-item dropdown">-->
+<!--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"-->
+<!--                   aria-haspopup="true" aria-expanded="true">-->
+<!--                    Competitie-->
+<!--                </a>-->
+<!--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">-->
+<!--                    <a class="dropdown-item" href="http://localhost:5001/divisions/overview/1">1ste afdeling</a>-->
+<!--                    <a class="dropdown-item" href="#">Another action</a>-->
+<!--                </div>-->
+<!--            </li>-->
         </ul>
         <ul class="navbar-nav ml-auto">
+            {% if not current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link disabled" href="#">Login</a>
+                <a class="nav-link" href="http://localhost:5001/login">Login</a>
             </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:5001/logout">Edit scores</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:5001/logout">Logout</a>
+            </li>
+            {% endif %}
+
+
         </ul>
     </div>
 </nav>

@@ -1,12 +1,27 @@
-from flask import Blueprint, jsonify, render_template, request
-import requests
+from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for
+from flask_login import current_user, login_user, logout_user, login_required
+from project.api.models import User
+from project.api.forms import LoginForm
 
 ui_login_blueprint = Blueprint('login', __name__, template_folder='./templates')
 
 @ui_login_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
-    response = requests.get('http://localhost:5002/users/ping')
-    return response
-    if request.method == 'POST':
-        return render_template("test.html")
-    return render_template("login.html")
+    if current_user.is_authenticated:
+        return "user is authenticated"
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None:
+            return redirect(url_for('login.login'))  # if the user doesn't exist or password is wrong, reload the page
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('misc.show_home'))  # if the user doesn't exist or password is wrong, reload the page
+    else:
+        flash('wrong credentials')
+    return render_template('login.html', title='Sign In', form=form)
+
+@ui_login_blueprint.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login.login'))

@@ -1,4 +1,7 @@
 Flask==1.0.2
 Flask-login
 requests
-
+flask-wtf
+Flask-SQLAlchemy==2.3.2
+psycopg2==2.8.6
+SQLAlchemy-serializer

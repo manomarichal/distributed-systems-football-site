@@ -3,10 +3,6 @@ from project.api.models import User
 
 users_blueprint = Blueprint('users', __name__)
 
-@users_blueprint.route('//users/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({'status': 'success','message': 'pong!'    })
-
 @users_blueprint.route('/users/<user_id>', methods=['GET'])
 def get_user_by_id(user_id):
     fail = {'status': 'fail',

@@ -1,7 +1,4 @@
-- weather stuff
 - login per team + portal for editing scores
 - admin inteface
-- increase site speed
 - all todos
-- nginx fixen
 - vertalen

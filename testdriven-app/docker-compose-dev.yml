@@ -22,22 +22,6 @@ services:
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
-    depends_on:
-      - users-db
-      - users
-
-  users:
-    container_name: users
-    build:
-      context: ./services/users
-      dockerfile: Dockerfile-dev
-    volumes:
-      - './services/users:/usr/src/app'
-    ports:
-      - 5002:5000
-    environment:
-      - FLASK_ENV=development
-      - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=postgresql://postgres:postgres@users-db:5432/users_dev
     depends_on:
       - users-db
@@ -45,7 +29,7 @@ services:
   users-db:
     container_name: users-db
     build:
-      context: ./services/users/project/db
+      context: ./services/ui/project/db
       dockerfile: Dockerfile
     ports:
     - 5435:5432
