@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+
+    .tablewithborder {
+        border: 2px solid #f5f5f5;
+        background: #f5f5f5;
+        padding: 5px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
+    .bordered {
+        border: 2px solid #f5f5f5;
+        background: #f5f5f5;
+        padding: 5px;
+    }
+
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .h2 {
+        font-size: 20px;
+    }
+
+    .table {
+        background: white;
+    }
+</style>
+<p class="h1" style="text-align: center">Pas scores thuismatches {{full_names[id|string]}} aan</p>
+<div class="row" style="padding-left: 15%; padding-right: 15%">
+    <div class="col bordered mx-auto">
+        <table class="table center">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col">Datum</th>
+                <th scope="col">Tegenstander</th>
+                <th scope="col">Uitslag</th>
+                <th scope="col">Meer informatie</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set counter = namespace(value=1)%}
+            {% for match in matches %}
+            <tr id="match{{ counter.value }}">
+                <td>{{ match.date }}</td>
+                <td>{{ full_names[match.away_team_id|string] }}</td>
+                {% if match.goals_home_team != None and match.goals_away_team != None %}
+                <td>{{ match.goals_home_team }} - {{ match.goals_away_team }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+                <td><a href="http://localhost:5001/matches/overview/{{match.id}}">Details wedstrijd</a></td>
+                <td><a href="http://localhost:5001/user/edit-scores/{{match.id}}">Pas scores aan</a></td>
+            </tr>
+            {% set counter.value = counter.value + 1 %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

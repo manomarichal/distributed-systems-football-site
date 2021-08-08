@@ -8,14 +8,14 @@ ui_login_blueprint = Blueprint('login', __name__, template_folder='./templates')
 @ui_login_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return "user is authenticated"
+        return redirect(url_for('misc.show_home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None:
-            return redirect(url_for('login.login'))  # if the user doesn't exist or password is wrong, reload the page
+            return redirect(url_for('login.login'))
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('misc.show_home'))  # if the user doesn't exist or password is wrong, reload the page
+        return redirect(url_for('misc.show_home'))
     else:
         flash('wrong credentials')
     return render_template('login.html', title='Sign In', form=form)

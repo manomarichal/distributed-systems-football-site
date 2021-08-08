@@ -19,6 +19,10 @@ def get_specific_match(match_id):
     result = Match.query.filter_by(id=match_id).first()
     return json.dumps(result.to_dict()), 200
 
+@matches_blueprint.route('/matches/team/<team_id>', methods=['GET'])
+def get_matches_from_team(team_id):
+    result = db.session.query(Match).filter(or_(Match.home_team_id == team_id, Match.away_team_id == team_id))
+    return json.dumps([row.to_dict() for row in result])
 
 @matches_blueprint.route('/matches/division/<division_id>/matchweek/<matchweek_nr>', methods=['GET'])
 def get_specific_matches(division_id, matchweek_nr):

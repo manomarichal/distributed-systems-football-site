@@ -19,7 +19,8 @@ def add_user_data():
             for row ,line in enumerate(data):
                 if row == 0: continue
                 db.session.add(User(username=line[0],
-                                    password=line[1]))
+                                    password=line[1],
+                                    team_id=line[2]))
         db.session.commit()
     except Exception as e:
         db.session.rollback()
