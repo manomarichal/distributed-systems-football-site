@@ -62,7 +62,7 @@ def get_matches_from_team(team_id):
     return json.dumps([row.to_dict() for row in result])
 
 @matches_blueprint.route('/matches/division/<division_id>/matchweek/<matchweek_nr>', methods=['GET'])
-def get_specific_matches(division_id, matchweek_nr):
+def get_matches_in_division_from_matchweek(division_id, matchweek_nr):
     result = Match.query.filter_by(division_id=division_id, matchweek=matchweek_nr)
     return json.dumps([row.to_dict() for row in result]), 200
 
@@ -71,6 +71,24 @@ def get_specific_matches(division_id, matchweek_nr):
 def get_max_matchweeks():
     maximum = db.session.query(func.max(Match.matchweek)).scalar()
     return jsonify({'max': maximum}), 200
+
+
+@matches_blueprint.route('/matches/per-week', methods=['GET'])
+def get_matches_per_week():
+    maximum = db.session.query(func.max(Match.matchweek)).scalar()
+    matches_per_week = dict()
+    for i in range(1, maximum):
+        matches_per_week[i] = [row.to_dict() for row in Match.query.filter_by(matchweek=i)]
+    return jsonify(matches_per_week)
+
+
+@matches_blueprint.route('/matches/division/<division_id>/per-week', methods=['GET'])
+def get_matches_per_week_for_division(division_id):
+    maximum = db.session.query(func.max(Match.matchweek)).scalar()
+    matches_per_week = dict()
+    for i in range(1, maximum):
+        matches_per_week[i] = [row.to_dict() for row in Match.query.filter_by(division_id=division_id, matchweek=i).order_by(Match.time)]
+    return jsonify(matches_per_week)
 
 
 @matches_blueprint.route('/matches/division/<division_id>/best-attack', methods=['GET'])
@@ -117,15 +135,6 @@ def get_team_with_most_clean_sheets(division_id):
 
     max_key = max(score_dict, key=score_dict.get)
     return json.dumps({'team': str(max_key), 'nr_of_clean_sheets': score_dict[max_key]})
-
-
-@matches_blueprint.route('/matches/division/<division_id>/per-week', methods=['GET'])
-def get_matches_per_week_for_division(division_id):
-    maximum = db.session.query(func.max(Match.matchweek)).scalar()
-    matches_per_week = dict()
-    for i in range(1, maximum):
-        matches_per_week[i] = [row.to_dict() for row in Match.query.filter_by(division_id=division_id, matchweek=i)]
-    return jsonify(matches_per_week)
 
 
 @matches_blueprint.route('/matches/division/<division_id>/team-points', methods=['GET'])

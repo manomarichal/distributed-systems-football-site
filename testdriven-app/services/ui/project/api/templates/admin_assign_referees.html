@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+
+    .bordered {
+        background: #f5f5f5;
+        padding: 7px;
+    }
+
+    .h1 {
+        font-size: 40px;
+    }
+
+    .table {
+        background: white;
+    }
+
+    .btn {
+        background: white;
+    }
+</style>
+
+
+<div style="padding-left: 15%; padding-right: 15%; padding-bottom: 20px; padding-top: 20px; text-align: center">
+    <p class="h1"> Assign referees to matchweeks</p>
+    <label for="matchweekFilter"></label><input type="number" id="matchweekFilter"
+                                                onkeydown="filterByMatchweek(event)"
+                                                placeholder="Filter by matchweek..">
+</div>
+<div class="row" style="padding-left: 15%; padding-right: 15%">
+
+    <div class="col bordered mx-auto">
+        <div id="matches">
+            {% set counter = namespace(value=0)%}
+            {% for matchweek in matches_by_week %}
+            {% if matches_by_week[matchweek]|length > 0 %}
+            <div class="bordered">
+                {% if counter.value == 0 %}
+                {% endif %}
+                {% set counter.value = counter.value + 1 %}
+                <p class="h2"> Matchweek {{ matchweek }} </p>
+                <table class="table center">
+                    <thead>
+                    <tr style="background:#d9edf7">
+                        <th scope="col">Uur</th>
+                        <th scope="col">Thuisploeg</th>
+                        <th scope="col">Uitploeg</th>
+                        <th scope="col">Referee</th>
+                        <th scope="col">Uitslag</th>
+                        <th scope="col">Meer informatie</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for match in matches_by_week[matchweek] %}
+                    <tr>
+                        <td>{{ match.time }}</td>
+                        <td>{{ full_names[match.home_team_id|string] }}</td>
+                        <td>{{ full_names[match.away_team_id|string] }}</td>
+                        {% if match.status != None %}
+                        <td> {{match.status}}</td>
+                        {% else %}
+                        <td> -</td>
+                        {% endif %}
+                        {% if match.goals_home_team != None and match.goals_away_team != None %}
+                        <td>{{ match.goals_home_team }} - {{ match.goals_away_team }}</td>
+                        {% else %}
+                        <td> -</td>
+                        {% endif %}
+                        <td><a href="http://localhost:5001/matches/overview/{{match.id}}">Details wedstrijd</a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function filterByMatchweek() {
+        if (event.key === "Enter") {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("matchweekFilter").value;
+            console.log(input);
+            tables = document.getElementById("matches").getElementsByTagName("div");
+            console.log(input)
+            for (i = 0; i < tables.length; i++) {
+                if (i == input - 1 || input < 1 || input > tables.length) {
+                    tables[i].style.display = "";
+                } else if (input === "") {
+                    tables[i].style.display = "";
+                } else {
+                    tables[i].style.display = "none";
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+</script>
+{% endblock %}

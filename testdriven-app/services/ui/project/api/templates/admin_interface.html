@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+
+    .bordered {
+        background: #f5f5f5;
+        padding: 7px;
+    }
+
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .table {
+        background: white;
+    }
+
+    .btn {
+        background: white;
+    }
+</style>
+
+<p class="h1" style="text-align: center"> Admin interface </p>
+<br>
+<div class="row" style="padding-left: 25%; padding-right: 25%">
+    <div class="col bordered mx-auto">
+        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update matches  </a>
+        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update teams  </a>
+        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update clubs  </a>
+        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update users  </a>
+        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update referees  </a>
+        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Assign referees to matchweeks  </a>
+    </div>
+</div>
+{% endblock %}

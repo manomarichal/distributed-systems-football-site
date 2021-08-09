@@ -12,6 +12,8 @@ ui_users_blueprint = Blueprint('users', __name__, template_folder='./templates')
 @ui_users_blueprint.route('/user/team-portal', methods=['GET'])
 @login_required
 def team_portal():
+    if current_user.team_id == None:
+        return render_template("not_authorized.html"), 404
     id = current_user.team_id
     form = ClubForm()
     full_names = requests.get("http://teams:5000/teams/full-names").json()
@@ -26,6 +28,8 @@ def team_portal():
 @ui_users_blueprint.route('/user/edit-match/<match_id>', methods=['GET', 'POST'])
 @login_required
 def edit_game_score(match_id):
+    if current_user.team_id == None:
+        return render_template("not_authorized.html"), 404
     session.pop('_flashes', None)
     form = ScoreForm()
     if form.validate_on_submit():
@@ -46,6 +50,8 @@ def edit_game_score(match_id):
 @ui_users_blueprint.route('/user/edit-club-info', methods=['GET', 'POST'])
 @login_required
 def edit_club_info():
+    if current_user.team_id == None:
+        return render_template("not_authorized.html"), 404
     form = ClubForm()
     id = current_user.team_id
     if form.validate_on_submit():
@@ -64,6 +70,8 @@ def edit_club_info():
 @ui_users_blueprint.route('/user/edit-team-info', methods=['GET', 'POST'])
 @login_required
 def edit_team_info():
+    if current_user.team_id == None:
+        return render_template("not_authorized.html"), 404
     form = TeamForm()
     id = current_user.team_id
     if form.validate_on_submit():
@@ -78,3 +86,21 @@ def edit_team_info():
     except requests.exceptions.ConnectionError:
         return jsonify({'status': 'fail', 'message': 'service required by this route is down'}), 404
 
+@ui_users_blueprint.route('/user/admin', methods=['GET', 'POST'])
+@login_required
+def show_admin():
+    if current_user.admin != True:
+        return render_template("not_authorized.html"), 404
+    return render_template("admin_interface.html")
+
+@ui_users_blueprint.route('/user/admin/assign-referees', methods=['GET', 'POST'])
+@login_required
+def admin_referees_assigning():
+    if current_user.admin != True:
+        return render_template("not_authorized.html"), 404
+    try:
+        matches_by_week = requests.get("http://leagues:5000/matches/per-week").json()
+        full_names = requests.get("http://teams:5000/teams/full-names").json()
+        return render_template("admin_assign_referees.html", full_names=full_names, matches_by_week=matches_by_week)
+    except requests.exceptions.ConnectionError:
+        return jsonify({'status': 'fail', 'message': 'service required by this route is down'}), 404

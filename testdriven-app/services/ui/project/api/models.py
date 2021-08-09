@@ -7,11 +7,13 @@ class User(db.Model, UserMixin):
     team_id = db.Column(db.Integer, unique=True)
     username = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
+    admin = db.Column(db.Boolean)
 
-    def __init__(self, username, password, team_id):
+    def __init__(self, username, password, team_id, admin):
         self.username = username
         self.password = password
-        self.team_id = team_id
+        self.team_id = team_id if team_id != "None" else None
+        self.admin = admin
 
 @login_manager.user_loader
 def load_user(user_id):

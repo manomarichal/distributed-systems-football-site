@@ -7,7 +7,7 @@
     <style type="text/css">
         /* navbar background color */
         .navbar-custom {
-            background-color: #339933;
+            background-color: #28a745;
         }
 
         /* navbar text & brand color */
@@ -30,6 +30,7 @@
 </head>
 
 <body>
+<div style="width: 100%">
 <nav class="navbar sticky-top navbar-custom navbar-expand-lg">
     <a class="navbar-brand" href="http://localhost:5001">L-V-L</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -77,19 +78,24 @@
                 <a class="nav-link" href="http://localhost:5001/login">Login</a>
             </li>
             {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="http://localhost:5001/user/team-portal">Team portaal</a>
-            </li>
+                {% if current_user.team_id != None %}
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:5001/user/team-portal">Team portaal</a>
+                </li>
+                {% endif %}
+                {% if current_user.admin == True %}
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:5001/user/admin">Admin</a>
+                </li>
+                {% endif %}
             <li class="nav-item">
                 <a class="nav-link" href="http://localhost:5001/logout">Logout</a>
             </li>
             {% endif %}
-
-
         </ul>
     </div>
 </nav>
-
+</div>
 {% block content %} {% endblock %}
 </body>
 </html>
