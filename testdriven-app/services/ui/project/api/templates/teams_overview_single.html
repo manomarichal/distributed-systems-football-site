@@ -69,7 +69,11 @@
             <tbody>
             {% for match in recent_matches %}
             <tr>
+                {% if match.home_team_id == team.id %}
                 <td>{{ full_names[match.away_team_id|string] }}</td>
+                {% else %}
+                <td>{{ full_names[match.home_team_id|string] }}</td>
+                {% endif %}
                 <td>{{ match.date }}</td>
                 <td>{{ match.time }}</td>
                 {% if match.goals_home_team != None and match.goals_away_team != None %}

@@ -29,7 +29,7 @@
 <div class="row" style="padding-left: 35%; padding-right: 35%">
     <div class="col bordered mx-auto" style="text-align: center">
         <form action="" method="post" novalidate>
-            <p>Vul beide velden met een getal in</p>
+            <p>Vul beide velden met een getal groter dan 0 in</p>
             {{ form.hidden_tag() }}
             <p>
                 {{full_names[match["home_team_id"]|string]}} {{ form.home_score(size=1) }} vs {{ form.away_score(size=1)

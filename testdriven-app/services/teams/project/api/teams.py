@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from project.api.models import Team, Club
 from project import db
 import json
@@ -28,6 +28,18 @@ def get_team_adress(team_id):
 
         club = Club.query.filter_by(stam_id=team.stam_id).first()
         return jsonify({'city': club.city, 'zip_code': club.zip_code, 'address': club.address}), 404
+    except ValueError:
+        return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
+
+@teams_blueprint.route('/teams/<team_id>/club', methods=['GET'])
+def get_club_from_team_id(team_id):
+    try:
+        team = Team.query.filter_by(id=team_id).first()
+        if not team:
+            return jsonify({'status': 'fail', 'message': 'Team does not exist'}), 404
+
+        club = Club.query.filter_by(stam_id=team.stam_id).first()
+        return json.dumps(club.to_dict())
     except ValueError:
         return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
 
@@ -66,3 +78,42 @@ def get_club_by_stam_number(stam_number):
         return json.dumps(result.to_dict()), 200
     except ValueError:
         return jsonify({'status': 'fail','message': 'Club does not exist'}), 404
+
+### PUT REQUESTS ###
+@teams_blueprint.route('/teams/<team_id>/club', methods=['PUT'])
+def update_club_info(team_id):
+    try:
+        team = Team.query.filter_by(id=team_id).first()
+        if not team:
+            return jsonify({'status': 'fail', 'message': 'Team does not exist'}), 404
+
+        club = Club.query.filter_by(stam_id=team.stam_id).first()
+        data = request.get_json()
+        club.name = data.get("name")
+        club.address = data.get("address")
+        club.city = data.get("city")
+        club.zip_code = int(data.get("zip_code"))
+        club.website = data.get("website")
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(repr(e))
+        return jsonify({'status': 'fail','message': 'Failed'}), 406
+    return jsonify({'status' : 'succes'}), 200
+
+@teams_blueprint.route('/teams/<team_id>', methods=['PUT'])
+def update_team_info(team_id):
+    try:
+        team = Team.query.filter_by(id=team_id).first()
+        if not team:
+            return jsonify({'status': 'fail', 'message': 'Team does not exist'}), 404
+
+        data = request.get_json()
+        team.colors = data.get("colors")
+        team.suffix = data.get("suffix")
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(repr(e))
+        return jsonify({'status': 'fail','message': 'Failed'}), 406
+    return jsonify({'status' : 'succes'}), 200

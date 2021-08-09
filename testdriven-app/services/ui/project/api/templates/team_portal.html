@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+
+    .bordered {
+        background: #f5f5f5;
+        padding: 7px;
+    }
+
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .table {
+        background: white;
+    }
+
+</style>
+
+<p class="h1" style="text-align: center">Info club <a style="font-size: 1rem" href="http://localhost:5001/user/edit-club-info">(Pas aan)</a>
+</p>
+<div class="row" style="padding-left: 15%; padding-right: 15%">
+    <div class="col bordered mx-auto">
+        <table class="table center">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col">Naam</th>
+                <th scope="col">Address</th>
+                <th scope="col">Stad</th>
+                <th scope="col">Zip code</th>
+                <th scope="col">Website</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{club.name}}</td>
+                <td>{{club.address}}</td>
+                <td>{{club.city}}</td>
+                <td>{{club.zip_code}}</td>
+                {% if club.website != "" %}
+                <td>{{club.website}}</td>
+                {% else %}
+                <td> geen website </td>
+                {% endif %}
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<p class="h1" style="text-align: center">Info team <a style="font-size: 1rem" href="http://localhost:5001/user/edit-team-info">(Pas aan) </a> </p>
+<div class="row" style="padding-left: 15%; padding-right: 15%">
+    <div class="col bordered mx-auto">
+        <table class="table center">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col">Stam club</th>
+                <th scope="col">Kleuren</th>
+                <th scope="col">Suffix</th>
+                <th scope="col">Extra info</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{club.name}}</td>
+                <td>{{team.colors}}</td>
+                {% if team["suffix"] != "" %}
+                <td>{{team["suffix"]}}</td>
+                {% else %}
+                <td>Geen suffix</td>
+                {% endif %}
+                <td><a href="http://localhost:5001/teams/overview/{{team.id}}">Pagina van {{full_names[id|string]}}</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<p class="h1" style="text-align: center">Scores thuismatches {{full_names[id|string]}}</p>
+<div class="row" style="padding-left: 15%; padding-right: 15%">
+    <div class="col bordered mx-auto">
+        <table class="table center">
+            <thead>
+            <tr style="background:#d9edf7">
+                <th scope="col">Datum</th>
+                <th scope="col">Kick-off tijd</th>
+                <th scope="col">Tegenstander</th>
+                <th scope="col">Uitslag</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set counter = namespace(value=1)%}
+            {% for match in matches %}
+            <tr id="match{{ counter.value }}">
+                <td>{{ match.date }}</td>
+                <td>{{ match.time }}</td>
+                <td>{{ full_names[match.away_team_id|string] }}</td>
+                {% if match.goals_home_team != None and match.goals_away_team != None %}
+                <td>{{ match.goals_home_team }} - {{ match.goals_away_team }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+                <td><a href="http://localhost:5001/user/edit-match/{{match.id}}">Pas aan</a></td>
+            </tr>
+            {% set counter.value = counter.value + 1 %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

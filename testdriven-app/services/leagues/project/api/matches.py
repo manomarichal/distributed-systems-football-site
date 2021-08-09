@@ -1,17 +1,54 @@
 import datetime
 
+import requests
 from flask import Blueprint, jsonify, request
 from project.api.models import Match
 from project import db
-from sqlalchemy import func, and_, or_
+from sqlalchemy import func, and_, or_, desc
 import json
 
 matches_blueprint = Blueprint('matches', __name__)
 
+def sort_matches(matches):
+    """Function to sort match objects"""
+    matches = [row.to_dict() for row in matches]
+    n = len(matches)
+    format = "%Y-%m-%d %H:%M"
+    for i in range(n):
+        already_sorted = True
+        for j in range(n - i - 1):
+            date_current = datetime.datetime.strptime(matches[j]["date"] + " " + matches[j]["time"], format)
+            date_next = datetime.datetime.strptime(matches[j + 1]["date"] + " " + matches[j + 1]["time"], format)
+            if date_current > date_next:
+                matches[j], matches[j + 1] = matches[j + 1], matches[j]
+                already_sorted = False
+        if already_sorted:
+            break
+    return matches
 
+### GET REQUESTS ###
 @matches_blueprint.route('/ping', methods=['GET'])
 def ping_pong():
     return jsonify({'status': 'success', 'message': 'pong!'})
+
+
+@matches_blueprint.route('/matches/home-team/<team_id>/recent', methods=['GET'])
+def get_upcoming_matches_for_team(team_id):
+    matches = Match.query.filter(and_(or_(Match.home_team_id == team_id, Match.away_team_id == team_id), Match.goals_home_team != None)).order_by(Match.date).all()
+    matches = [row.to_dict() for row in reversed(matches)]
+    return json.dumps(matches[0:3])
+
+
+@matches_blueprint.route('/matches/home-team/<team_id>', methods=['GET'])
+def get_matches_for_home_team(team_id):
+    matches = db.session.query(Match).filter(Match.home_team_id == team_id).order_by(Match.date)
+    return json.dumps([row.to_dict() for row in matches])
+
+
+@matches_blueprint.route('/matches/home-team/<team_id>/upcoming', methods=['GET'])
+def get_upcoming_matches_for_home_team(team_id):
+    matches = Match.query.filter_by(home_team_id=team_id, goals_home_team=None)
+    return json.dumps([row.to_dict() for row in matches])
 
 
 @matches_blueprint.route('/matches/<match_id>', methods=['GET'])
@@ -21,7 +58,7 @@ def get_specific_match(match_id):
 
 @matches_blueprint.route('/matches/team/<team_id>', methods=['GET'])
 def get_matches_from_team(team_id):
-    result = db.session.query(Match).filter(or_(Match.home_team_id == team_id, Match.away_team_id == team_id))
+    result = db.session.query(Match).filter(or_(Match.home_team_id == team_id, Match.away_team_id == team_id)).order_by(Match.date)
     return json.dumps([row.to_dict() for row in result])
 
 @matches_blueprint.route('/matches/division/<division_id>/matchweek/<matchweek_nr>', methods=['GET'])
@@ -82,24 +119,6 @@ def get_team_with_most_clean_sheets(division_id):
     return json.dumps({'team': str(max_key), 'nr_of_clean_sheets': score_dict[max_key]})
 
 
-@matches_blueprint.route('/matches/home-team/<team_id>/recent', methods=['GET'])
-def get_upcoming_matches_for_team(team_id):
-    matches = Match.query.filter(and_(or_(Match.home_team_id == team_id, Match.away_team_id == team_id), Match.goals_home_team != None)).all()
-    return json.dumps(sort_matches(matches)[-3:])
-
-
-@matches_blueprint.route('/matches/home-team/<team_id>', methods=['GET'])
-def get_matches_for_home_team(team_id):
-    matches = Match.query.filter_by(home_team_id=team_id)
-    return json.dumps([row.to_dict() for row in matches])
-
-
-@matches_blueprint.route('/matches/home-team/<team_id>/upcoming', methods=['GET'])
-def get_upcoming_matches_for_home_team(team_id):
-    matches = Match.query.filter_by(home_team_id=team_id, goals_home_team=None)
-    return json.dumps([row.to_dict() for row in matches])
-
-
 @matches_blueprint.route('/matches/division/<division_id>/per-week', methods=['GET'])
 def get_matches_per_week_for_division(division_id):
     maximum = db.session.query(func.max(Match.matchweek)).scalar()
@@ -122,25 +141,6 @@ def get_points_for_teams_in_division(division_id):
             elif match.goals_home_team == match.goals_away_team:
                 team_rankings[team_id] += 1  # equal
     return jsonify(team_rankings)
-
-
-def sort_matches(matches):
-    """Function to sort match objects"""
-    matches = [row.to_dict() for row in matches]
-    n = len(matches)
-    format = "%Y-%m-%d %H:%M"
-    for i in range(n):
-        already_sorted = True
-        for j in range(n - i - 1):
-            date_current = datetime.datetime.strptime(matches[j]["date"] + " " + matches[j]["time"], format)
-            date_next = datetime.datetime.strptime(matches[j + 1]["date"] + " " + matches[j + 1]["time"], format)
-            if date_current > date_next:
-                matches[j], matches[j + 1] = matches[j + 1], matches[j]
-                already_sorted = False
-        if already_sorted:
-            break
-    return matches
-
 
 @matches_blueprint.route('/matches/track-record/<team_id>', methods=['GET'])
 def get_team_track_record(team_id):
@@ -225,3 +225,13 @@ def get_division_statistics(division_id):
         div_stats[match.home_team_id]['goals_against'] += match.goals_away_team
         div_stats[match.away_team_id]['goals_against'] += match.goals_home_team
     return jsonify(div_stats)
+
+### PUT REQUESTS ###
+@matches_blueprint.route('/matches/<match_id>/score', methods=['PUT'])
+def update_match_score(match_id):
+    match = Match.query.filter_by(id=match_id).first()
+    data = request.get_json()
+    match.goals_home_team = int(data.get("home_score"))
+    match.goals_away_team = int(data.get("away_score"))
+    db.session.commit()
+    return jsonify({'status' : 'succes'}), 200

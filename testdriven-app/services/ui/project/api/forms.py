@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -9,7 +9,21 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-class ScoreForm(FlaskForm):
-    home_score = IntegerField('Goals thuisploeg', validators=[DataRequired()])
-    away_score = IntegerField('Goals uitploeg', validators=[DataRequired()])
+class ScoreForm(FlaskForm): # TODO je kan geen nullen invoegen
+    home_score = IntegerField('Goals thuisploeg', validators=[DataRequired(), NumberRange(min=0)])
+    away_score = IntegerField('Goals uitploeg', validators=[DataRequired(), NumberRange(min=0)])
+    submit = SubmitField('Bevestig')
+
+class ClubForm(FlaskForm):
+    name = StringField('Naam', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    zip_code = IntegerField('Zip code', validators=[DataRequired()])
+    city = StringField('Stad', validators=[DataRequired()])
+    website = StringField('Website')
+    submit = SubmitField('Bevestig')
+
+class TeamForm(FlaskForm):
+    colors = StringField('Kleuren', validators=[DataRequired()])
+    suffix = StringField('suffix', validators=[DataRequired()])
+    stam_id = IntegerField('Stam id', validators=[DataRequired()])
     submit = SubmitField('Bevestig')

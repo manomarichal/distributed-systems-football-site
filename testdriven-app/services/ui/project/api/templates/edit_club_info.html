@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .white {
+        background: white;
+        padding-bottom: 5px;
+    }
+
+    .blueborder
+    {
+        background: #d9edf7;
+        border: 2px solid #f5f5f5;
+        padding: 5px;
+    }
+</style>
+
+<p class="h1" style="text-align: center">Pas de info van club {{full_names[id|string]}} aan</p>
+<div class="row" style="padding-left: 35%; padding-right: 35%">
+    <div class="col mx-auto" style="text-align: center">
+        <div class="white">
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>Vul de velden correct aan en druk bevestig</p>
+            <p>Name: {{ form.name(size=20, value=club.name) }}</p>
+            <p>Address: {{ form.address(size=20, value=club.address) }}</p>
+            <p>City: {{ form.city(size=20, value=club.city) }}</p>
+            <p>Zip code: {{ form.zip_code(size=20, value=club.zip_code) }}</p>
+            <p>Website: {{ form.website(size=20, value=club.website) }}</p>
+            <p>{{ form.submit() }}</p>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
