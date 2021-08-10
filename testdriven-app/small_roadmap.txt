@@ -6,3 +6,4 @@ finishing touches
 - vertalen
 - maybe split up clubs/teams
 - manual
+- urls moeten Restful zijn

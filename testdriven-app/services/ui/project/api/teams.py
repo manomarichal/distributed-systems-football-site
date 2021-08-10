@@ -17,7 +17,6 @@ def show_team_overview(team_id):
 
     return render_template("teams_overview_single.html", team = team, extra_info = extra_info, recent_matches=recent_matches, upcoming_matches=upcoming_matches, full_names = full_names)
 
-# TODO make this page faster
 @ui_teams_blueprint.route('/teams/overview', methods=['GET'])
 def show_all_teams():
     teams = requests.get(f'http://teams:5000/teams').json()

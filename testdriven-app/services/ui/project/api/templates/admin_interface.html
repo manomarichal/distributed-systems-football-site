@@ -29,12 +29,24 @@
 <br>
 <div class="row" style="padding-left: 25%; padding-right: 25%">
     <div class="col bordered mx-auto">
-        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update matches  </a>
-        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update teams  </a>
-        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update clubs  </a>
-        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update users  </a>
-        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Update referees  </a>
-        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block" role="button"> Assign referees to matchweeks  </a>
+        <a href="http://localhost:5001/admin/match" class="btn btn-outline-success btn-block" role="button"> Update
+            matches </a>
+        <a href="http://localhost:5001/admin/division" class="btn btn-outline-success btn-block" role="button"> Update
+            divisions </a>
+        <a href="http://localhost:5001/admin/team" class="btn btn-outline-success btn-block" role="button"> Update
+            teams </a>
+        <a href="http://localhost:5001/admin/club" class="btn btn-outline-success btn-block" role="button"> Update
+            clubs </a>
+        <a href="http://localhost:5001/admin/referee" class="btn btn-outline-success btn-block" role="button"> Update
+            referees </a>
+        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block"
+           role="button"> Assign referees to matchweeks </a>
+        {% if current_user.is_authenticated %}
+            {% if current_user.admin == True %}
+        <a href="http://localhost:5001/admin/referee" class="btn btn-outline-primary btn-block" role="button"> Add or remove
+            Admins </a>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -17,8 +17,8 @@ def login():
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('misc.show_home'))
     else:
-        flash('wrong credentials')
-    return render_template('login.html', title='Sign In', form=form)
+        pass
+        return render_template('login.html', title='Sign In', form=form)
 
 @ui_login_blueprint.route('/logout', methods=['GET'])
 @login_required

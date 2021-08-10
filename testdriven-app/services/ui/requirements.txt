@@ -5,3 +5,5 @@ flask-wtf
 Flask-SQLAlchemy==2.3.2
 psycopg2==2.8.6
 SQLAlchemy-serializer
+SQLAlchemy==1.3.22
+flask-admin

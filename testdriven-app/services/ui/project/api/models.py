@@ -3,12 +3,12 @@ from project import db, login_manager
 from flask_login import UserMixin
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     team_id = db.Column(db.Integer, unique=True)
     username = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     admin = db.Column(db.Boolean)
-
     def __init__(self, username, password, team_id, admin):
         self.username = username
         self.password = password
