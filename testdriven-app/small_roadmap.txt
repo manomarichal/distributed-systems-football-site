@@ -1,5 +1,3 @@
-- admin interface
-
 finishing touches
 - containers uitschakelen maar site werkt (aka 404 pages fixen)
 - all todos
@@ -7,3 +5,7 @@ finishing touches
 - maybe split up clubs/teams
 - manual
 - urls moeten Restful zijn
+- login pagina mooi maken + homepagina
+- user logins genereren voor elk team
+- actually voor paswoorden kijken
+- divisions aanmaken dynamische knoppen

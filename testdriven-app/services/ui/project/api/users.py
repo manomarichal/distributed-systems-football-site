@@ -137,9 +137,11 @@ def assign_referee_to_match(match_id):
 @ui_users_blueprint.route('/user/match/<match_id>/referee', methods=['POST'])
 @login_required
 def update_match_referee(match_id):
+    if current_user.admin != True:
+        return render_template("not_authorized.html"), 404
     try:
         requests.post("http://leagues:5000/matches/%s/referee" % match_id, json=request.form)
-        return redirect(url_for('users.referee_overview', match_id=match_id))
+        return redirect(url_for('users.referee_overview'))
     except Exception:
         return render_template("internal_server_error.html"), 500
 

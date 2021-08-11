@@ -1,3 +1,4 @@
-username, password, team_id, admin
-fc_vervoort,test,1,False
-admin,admin,None,True
+username, password, team_id, admin, superadmin
+fc_vervoort,test,1,False, False
+admin,admin,None,True,False
+superadmin,superadmin,None,True,True

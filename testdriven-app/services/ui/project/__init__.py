@@ -45,15 +45,21 @@ def create_app(script_info=None):
 
     # admin interface
     admin = Admin(app, template_mode='bootstrap4')
-    admin.add_link(MenuLink(name='Go back to website', category='', url="http://localhost:5001"))
+    admin.add_link(MenuLink(name='Go back to website', category='', url="http://localhost:5001/user/admin"))
 
-    class SecureView(ModelView):
+    class AdminOnlyView(ModelView):
         def is_accessible(self):
             if current_user.is_authenticated:
-                if current_user.admin:
-                    return True
-                else:
-                    return False
+                return True if current_user.admin or current_user.super_admin else False
+            return False
+
+    class AdminUserView(ModelView):
+        column_list = ('username', 'team_id')
+
+        def is_accessible(self):
+            if current_user.is_authenticated:
+                return True if current_user.admin or current_user.super_admin else False
+            return False
     try:
         # leagues database connection
         leagues_engine = create_engine("postgresql://postgres:postgres@leagues-db:5432/leagues_dev")
@@ -68,8 +74,8 @@ def create_app(script_info=None):
         class Division(LeaguesBase):
             __table__ = Table('divisions', leagues_metadata, autoload_with=leagues_engine)
 
-        admin.add_view(SecureView(Match, leagues_session))
-        admin.add_view(SecureView(Division, leagues_session))
+        admin.add_view(AdminOnlyView(Match, leagues_session))
+        admin.add_view(AdminOnlyView(Division, leagues_session))
     except Exception:
         pass
 
@@ -89,25 +95,8 @@ def create_app(script_info=None):
             __table__ = Table('clubs', teams_metadata, autoload_with=teams_engine)
             can_create = True
 
-        admin.add_view(SecureView(Team, teams_session))
-        admin.add_view(SecureView(Club, teams_session))
-    except Exception:
-        pass
-
-    try:
-        # users database connection
-        users_engine = create_engine("postgresql://postgres:postgres@users-db:5432/users_dev")
-        users_session = sessionmaker(users_engine)
-        users_session = users_session()
-
-        users_metadata = MetaData(bind=users_engine, reflect=True)
-        UsersBase = declarative_base()
-
-        class User(UsersBase):
-            __table__ = Table('users', users_metadata, autoload_with=teams_engine)
-            can_create = True
-
-        admin.add_view(SecureView(User, users_session))
+        admin.add_view(AdminOnlyView(Team, teams_session))
+        admin.add_view(AdminOnlyView(Club, teams_session))
     except Exception:
         pass
     
@@ -124,7 +113,24 @@ def create_app(script_info=None):
             __table__ = Table('referees', referees_metadata, autoload_with=teams_engine)
             can_create = True
 
-        admin.add_view(SecureView(Referee, referees_session))
+        admin.add_view(AdminOnlyView(Referee, referees_session))
+    except Exception:
+        pass
+
+    try:
+        # users database connection
+        users_engine = create_engine("postgresql://postgres:postgres@users-db:5432/users_dev")
+        users_session = sessionmaker(users_engine)
+        users_session = users_session()
+
+        users_metadata = MetaData(bind=users_engine, reflect=True)
+        UsersBase = declarative_base()
+
+        class User(UsersBase):
+            __table__ = Table('users', users_metadata, autoload_with=teams_engine)
+            can_create = True
+
+        admin.add_view(AdminUserView(User, users_session))
     except Exception:
         pass
 

@@ -17,11 +17,12 @@ def add_user_data():
         with open('data/team_users.csv', mode='r')as file:
             data = csv.reader(file)
             for row ,line in enumerate(data):
-                if row == 0 or len(line) != 4: continue
+                if row == 0 or len(line) != 5: continue
                 db.session.add(User(username=line[0],
                                     password=line[1],
                                     team_id=line[2],
-                                    admin=True if line[3] == "True" else False))
+                                    admin=True if line[3] == "True" else False,
+                                    super_admin=True if line[4] == "True" else False))
         db.session.commit()
     except Exception as e:
         db.session.rollback()
