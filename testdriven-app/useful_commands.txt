@@ -10,10 +10,10 @@ sudo docker-compose -f docker-compose-dev.yml up -d
 sudo docker-compose -f docker-compose-dev.yml up -d --build
 
 (acces database through psql)
-sudo docker-compose -f docker-compose-dev.yml exec users-db psql -U postgres
+sudo docker-compose -f docker-compose-dev.yml exec referees-db psql -U postgres
 
 (run manage.py command)
-sudo docker-compose -f docker-compose-dev.yml run users python manage.py recreate-db
+sudo docker-compose -f docker-compose-dev.yml run referees python manage.py recreate-db
 
 - sometimes port 80 is already bound to something, use this to find it, usually apache2
 sudo netstat -nlptu | grep 80

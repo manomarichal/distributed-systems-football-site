@@ -10,3 +10,5 @@ sudo docker-compose -f docker-compose-dev.yml run leagues python manage.py add-m
 sudo docker-compose -f docker-compose-dev.yml run user-interface python manage.py recreate-db
 sudo docker-compose -f docker-compose-dev.yml run user-interface python manage.py add-user-data
 
+sudo docker-compose -f docker-compose-dev.yml run referees python manage.py recreate-db
+sudo docker-compose -f docker-compose-dev.yml run referees python manage.py add-referees-data

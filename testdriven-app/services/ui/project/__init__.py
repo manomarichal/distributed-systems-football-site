@@ -6,6 +6,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.menu import MenuLink
+
 import os
 
 # instantiate db
@@ -43,6 +45,7 @@ def create_app(script_info=None):
 
     # admin interface
     admin = Admin(app, template_mode='bootstrap4')
+    admin.add_link(MenuLink(name='Go back to website', category='', url="http://localhost:5001"))
 
     class SecureView(ModelView):
         def is_accessible(self):
@@ -92,7 +95,7 @@ def create_app(script_info=None):
         pass
 
     try:
-        # teams database connection
+        # users database connection
         users_engine = create_engine("postgresql://postgres:postgres@users-db:5432/users_dev")
         users_session = sessionmaker(users_engine)
         users_session = users_session()
@@ -105,6 +108,23 @@ def create_app(script_info=None):
             can_create = True
 
         admin.add_view(SecureView(User, users_session))
+    except Exception:
+        pass
+    
+    try:
+        # referees database connection
+        referees_engine = create_engine("postgresql://postgres:postgres@referees-db:5432/referees_dev")
+        referees_session = sessionmaker(referees_engine)
+        referees_session = referees_session()
+
+        referees_metadata = MetaData(bind=referees_engine, reflect=True)
+        RefereesBase = declarative_base()
+
+        class Referee(RefereesBase):
+            __table__ = Table('referees', referees_metadata, autoload_with=teams_engine)
+            can_create = True
+
+        admin.add_view(SecureView(Referee, referees_session))
     except Exception:
         pass
 

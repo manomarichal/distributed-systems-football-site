@@ -25,13 +25,14 @@ class Match(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     division_id = db.Column(db.Integer, nullable=False)
     matchweek = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    time = db.Column(db.Time, nullable=False)
     home_team_id = db.Column(db.Integer, nullable=True)
     away_team_id = db.Column(db.Integer, nullable=True)
     goals_home_team = db.Column(db.Integer, nullable=True)
     goals_away_team = db.Column(db.Integer, nullable=True)
     status = db.Column(db.Integer, nullable=True)
+    referee_id = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
 
     def __init__(self, division_id, matchweek, date, time, home_team_id, away_team_id, goals_home_team, goals_away_team, status):
         self.matchweek = matchweek
@@ -43,3 +44,4 @@ class Match(db.Model, SerializerMixin):
         self.goals_home_team = goals_home_team if goals_home_team != "NULL" else None
         self.goals_away_team = goals_away_team if goals_away_team != "NULL" else None
         self.status = status if status != "NULL" else None
+        self.referee_id = None

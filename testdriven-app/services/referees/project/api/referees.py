@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
 from project.api.models import Referee
+import json
 
 referees_blueprint = Blueprint('referees', __name__)
 
@@ -31,3 +32,8 @@ def get_referee_by_id(referee_id):
         return jsonify(response), 200
     except ValueError:
         return jsonify(fail), 404
+
+@referees_blueprint.route('/referees', methods=['GET'])
+def get_available_referees():
+    result = Referee.query.all()
+    return json.dumps([row.to_dict() for row in result]), 200

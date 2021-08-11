@@ -91,6 +91,12 @@ def get_matches_per_week_for_division(division_id):
     return jsonify(matches_per_week)
 
 
+@matches_blueprint.route('/matches/matchweek/<matchweek_nr>/referees/assigned')
+def get_already_assigned_referees(matchweek_nr):
+    matches = db.session.query(Match).filter(and_(Match.matchweek == matchweek_nr, Match.referee_id != None))
+    return jsonify({'referee_ids' : [match.referee_id for match in matches]})
+
+
 @matches_blueprint.route('/matches/division/<division_id>/best-attack', methods=['GET'])
 def get_team_with_best_attack(division_id):
     matches = Match.query.filter_by(division_id=division_id)
