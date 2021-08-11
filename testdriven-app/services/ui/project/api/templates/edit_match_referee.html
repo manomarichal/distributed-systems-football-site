@@ -4,32 +4,93 @@
 <style type="text/css">
     .h1 {
         margin-top: 20px;
-        margin-left: 100px;
-        margin-right: 100px;
         font-size: 30px;
         text-align: center;
     }
 
+    .h2 {
+        margin-top: 20px;
+        font-size: 20px;
+        text-align: center;
+    }
     .white {
         background: white;
         padding-bottom: 5px;
     }
 
-    .blueborder
-    {
+    .blueborder {
         background: #d9edf7;
         border: 2px solid #f5f5f5;
         padding: 5px;
     }
 </style>
 
-<p class="h1" style="text-align: center">Pas de info van {{full_names[id|string]}} aan</p>
-<div class="row" style="padding-left: 35%; padding-right: 35%">
-    <div class="col mx-auto" style="text-align: center">
-        <div class="white">
-        {{ available_referees }}
-        {{ unavailable_referees }}
-        </div>
+<p class="h1">Select or change referee</p>
+
+{% if match.referee_id != None %}
+<div class="row" style="padding-left: 30%; padding-right: 30%">
+    <div class="col bordered mx-auto">
+        <br>
+        <table class="table center">
+            <tbody>
+            <td colspan="100%" class="h2" style="text-align: center">Currently assigned</td>
+            <tr>
+                <td style="text-align: right;"> {{ referee_names[match.referee_id|string] }}</td>
+                <td style="text-align: right">
+                    <form action="#" method="post">
+                        <button name="new_id" class="btn btn-outline-danger" value="None">Remove from this match</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if unavailable_referees|length > 0 %}
+<div class="row" style="padding-left: 30%; padding-right: 30%">
+    <div class="col bordered mx-auto">
+        <br>
+        <table class="table center">
+            <tbody>
+            <td colspan="100%" class="h2" style="text-align: center">Unavailable referees</td>
+            {% for referee in unavailable_referees %}
+            <tr>
+                <td style="text-align: center;">{{ referee.first_name }} {{ referee.last_name }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<div class="row" style="padding-left: 30%; padding-right: 30%">
+    <div class="col bordered mx-auto">
+        <br>
+        <table class="table center">
+<!--            <thead>-->
+<!--            <tr class="hideme">-->
+<!--                <th scope="col">Uur</th>-->
+<!--                <th scope="col">Thuisploeg</th>-->
+<!--                <th scope="col">Uitploeg</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+            <tbody>
+            <td colspan="100%" class="h2" style="text-align: center">Available referees</td>
+            {% for referee in available_referees %}
+            <tr>
+                <td style="text-align: center;">{{ referee.first_name }} {{ referee.last_name }}</td>
+                <td style="text-align: right">
+                    <form action="#" method="post">
+                        <button name="new_id" class="btn btn-outline btn-outline-success" value="{{referee.id}}">Assign to this match</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

@@ -3,7 +3,7 @@ import json
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for, session
 from flask_login import current_user, login_user, logout_user, login_required
 from project.api.models import User
-from project.api.forms import LoginForm, ScoreForm, ClubForm, TeamForm
+from project.api.forms import LoginForm, ScoreForm, ClubForm, TeamForm, NewRefereeForm
 import requests
 
 
@@ -95,41 +95,51 @@ def show_admin():
     return render_template("admin_interface.html")
 
 
-@ui_users_blueprint.route('/user/admin/assign-referees', methods=['GET', 'POST'])
+@ui_users_blueprint.route('/user/admin/referees/assign', methods=['GET', 'POST'])
 @login_required
-def admin_referees_assigning():
+def referee_overview():
     if current_user.admin != True:
         return render_template("not_authorized.html"), 404
     try:
         matches_by_week = requests.get("http://leagues:5000/matches/per-week").json()
         full_names = requests.get("http://teams:5000/teams/full-names").json()
-        return render_template("admin_assign_referees.html", full_names=full_names, matches_by_week=matches_by_week)
+        referee_names = requests.get("http://referees:5000/referees/names").json()
+        return render_template("admin_assign_referees.html", full_names=full_names, matches_by_week=matches_by_week, referee_names=referee_names)
     except requests.exceptions.ConnectionError:
         return jsonify({'status': 'fail', 'message': 'service required by this route is down'}), 404
 
-
-@ui_users_blueprint.route('/user/match/<match_id>/referee', methods=['GET', 'POST'])
+@ui_users_blueprint.route('/user/match/<match_id>/referee', methods=['GET'])
 @login_required
 def assign_referee_to_match(match_id):
     if current_user.admin != True:
         return render_template("not_authorized.html"), 404
-    if False:
-        return redirect(url_for('users.team_portal'))
-    else:
-        pass
     try:
         referees = requests.get("http://referees:5000/referees").json()
         match = requests.get("http://leagues:5000/matches/%s" % match_id).json()
-        unavailable_referee_ids = requests.get("http://leagues:5000/matches/matchweek/%s/referees/assigned" % match.matchweek).json()
+        unavailable_referee_ids = requests.get("http://leagues:5000/matches/matchweek/%s/referees/assigned" % match["matchweek"]).json()
+        referee_names = requests.get("http://referees:5000/referees/names").json()
+        full_names = requests.get("http://teams:5000/teams/full-names").json()
+
         available_referees = list()
         unavailable_referees = list()
         for referee in referees:
-            if referee.id in unavailable_referee_ids["referee_ids"]:
+            if referee["id"] in unavailable_referee_ids["referee_ids"]:
                 unavailable_referees.append(referee)
             else:
                 available_referees.append(referee)
-        full_names = requests.get("http://teams:5000/teams/full-names").json()
-
-        return render_template("edit_match_referee.html", available_referees=available_referees, unavailable_referees=unavailable_referees ,full_names=full_names, match=match)
+        return render_template("edit_match_referee.html", referee_names=referee_names, available_referees=available_referees, unavailable_referees=unavailable_referees ,full_names=full_names, match=match)
     except requests.exceptions.ConnectionError:
-        return jsonify({'status': 'fail', 'message': 'service required by this route is down'}), 404
+        return jsonify({'status': 'fail', 'message': 'service required by this route is down'}), 500
+    except Exception:
+        return render_template("internal_server_error.html"), 500
+
+
+@ui_users_blueprint.route('/user/match/<match_id>/referee', methods=['POST'])
+@login_required
+def update_match_referee(match_id):
+    try:
+        requests.post("http://leagues:5000/matches/%s/referee" % match_id, json=request.form)
+        return redirect(url_for('users.referee_overview', match_id=match_id))
+    except Exception:
+        return render_template("internal_server_error.html"), 500
+

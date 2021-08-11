@@ -1,7 +1,8 @@
 from sqlalchemy.sql import func
 from project import db
+from sqlalchemy_serializer import SerializerMixin
 
-class Referee(db.Model):
+class Referee(db.Model, SerializerMixin):
     __tablename__ = 'referees'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(128), nullable=False)

@@ -27,3 +27,6 @@ class TeamForm(FlaskForm):
     suffix = StringField('suffix', validators=[DataRequired()])
     stam_id = IntegerField('Stam id', validators=[DataRequired()])
     submit = SubmitField('Bevestig')
+
+class NewRefereeForm(FlaskForm):
+    new_id = IntegerField('referee id', validators=[DataRequired()])

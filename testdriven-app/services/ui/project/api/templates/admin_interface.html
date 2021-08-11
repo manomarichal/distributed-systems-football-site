@@ -39,8 +39,8 @@
             clubs </a>
         <a href="http://localhost:5001/admin/referee" class="btn btn-outline-success btn-block" role="button"> Update
             referees </a>
-        <a href="http://localhost:5001/user/admin/assign-referees" class="btn btn-outline-success btn-block"
-           role="button"> Assign referees to matchweeks </a>
+        <a href="http://localhost:5001/user/admin/referees/assign" class="btn btn-outline-success btn-block"
+           role="button"> Assign referees to matches </a>
         {% if current_user.is_authenticated %}
             {% if current_user.admin == True %}
         <a href="http://localhost:5001/admin/referee" class="btn btn-outline-primary btn-block" role="button"> Add or remove

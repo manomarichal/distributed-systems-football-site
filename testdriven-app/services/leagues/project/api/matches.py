@@ -78,7 +78,7 @@ def get_matches_per_week():
     maximum = db.session.query(func.max(Match.matchweek)).scalar()
     matches_per_week = dict()
     for i in range(1, maximum):
-        matches_per_week[i] = [row.to_dict() for row in Match.query.filter_by(matchweek=i)]
+        matches_per_week[i] = [row.to_dict() for row in Match.query.filter_by(matchweek=i).order_by(Match.time)]
     return jsonify(matches_per_week)
 
 
@@ -241,12 +241,20 @@ def get_division_statistics(division_id):
         div_stats[match.away_team_id]['goals_against'] += match.goals_home_team
     return jsonify(div_stats)
 
-### PUT REQUESTS ###
+### OTHER REQUESTS ###
 @matches_blueprint.route('/matches/<match_id>/score', methods=['PUT'])
 def update_match_score(match_id):
     match = Match.query.filter_by(id=match_id).first()
     data = request.get_json()
     match.goals_home_team = int(data.get("home_score"))
     match.goals_away_team = int(data.get("away_score"))
+    db.session.commit()
+    return jsonify({'status' : 'succes'}), 200
+
+@matches_blueprint.route('/matches/<match_id>/referee', methods=['POST'])
+def update_referee(match_id):
+    match = Match.query.filter_by(id=match_id).first()
+    data = request.get_json()
+    match.referee_id = int(data.get("new_id")) if data.get("new_id") != "None" else None
     db.session.commit()
     return jsonify({'status' : 'succes'}), 200

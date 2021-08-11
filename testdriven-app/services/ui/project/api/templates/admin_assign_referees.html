@@ -29,7 +29,6 @@
                                                 placeholder="Filter by matchweek..">
 </div>
 <div class="row" style="padding-left: 15%; padding-right: 15%">
-
     <div class="col bordered mx-auto">
         <div id="matches">
             {% set counter = namespace(value=0)%}
@@ -48,7 +47,7 @@
                         <th scope="col">Uitploeg</th>
                         <th scope="col">Uitslag</th>
                         <th scope="col">Referee</th>
-                        <th scope="col">Meer informatie</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,12 +62,12 @@
                         <td> -</td>
                         {% endif %}
                         {% if match.referee_id != None %}
-                        <td>{{ match.referee_id }}</td>
+                        <td>{{referee_names[match.referee_id|string]}}</td>
                         {% else %}
                         <td> -</td>
                         {% endif %}
                         <td><a href="http://localhost:5001//user/match/{{match.id}}/referee">
-                            {% if match.referee_id != None %} Assign referee {% else %} Edit referee {% endif %}
+                            {% if match.referee_id != None %} Change {% else %} Assign {% endif %}
                         </a></td>
                     </tr>
                     {% endfor %}
