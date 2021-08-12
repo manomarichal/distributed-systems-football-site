@@ -18,7 +18,7 @@ class Team(db.Model, SerializerMixin):
 class Club(db.Model, SerializerMixin):
     __tablename__ = 'clubs'
     stam_id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(128), nullable=False) # TODO change to stam id primary id
+    name = db.Column(db.String(128), nullable=False)
     address = db.Column(db.String(128), nullable=True)
     zip_code = db.Column(db.Integer, nullable=True)
     city = db.Column(db.String(128), nullable=False)

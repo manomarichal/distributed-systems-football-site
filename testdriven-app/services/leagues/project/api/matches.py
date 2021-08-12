@@ -34,15 +34,21 @@ def ping_pong():
 
 @matches_blueprint.route('/matches/home-team/<team_id>/recent', methods=['GET'])
 def get_upcoming_matches_for_team(team_id):
-    matches = Match.query.filter(and_(or_(Match.home_team_id == team_id, Match.away_team_id == team_id), Match.goals_home_team != None)).order_by(Match.date).all()
-    matches = [row.to_dict() for row in reversed(matches)]
-    return json.dumps(matches[0:3])
+    try:
+        matches = Match.query.filter(and_(or_(Match.home_team_id == team_id, Match.away_team_id == team_id), Match.goals_home_team != None)).order_by(Match.date).all()
+        matches = [row.to_dict() for row in reversed(matches)]
+        return json.dumps(matches[0:3])
+    except Exception:
+        return jsonify({'status': 'fail','message': 'Operation failed'}), 404
 
 
 @matches_blueprint.route('/matches/home-team/<team_id>', methods=['GET'])
 def get_matches_for_home_team(team_id):
-    matches = db.session.query(Match).filter(Match.home_team_id == team_id).order_by(Match.date)
-    return json.dumps([row.to_dict() for row in matches])
+    try:
+        matches = db.session.query(Match).filter(Match.home_team_id == team_id).order_by(Match.date)
+        return json.dumps([row.to_dict() for row in matches])
+    except Exception:
+        return jsonify({'status': 'fail','message': 'Operation failed'}), 404
 
 
 @matches_blueprint.route('/matches/home-team/<team_id>/upcoming', methods=['GET'])

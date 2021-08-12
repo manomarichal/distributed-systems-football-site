@@ -12,8 +12,8 @@ def get_division_by_division_id(division_id):
         if not result:
             return jsonify({'status': 'fail','message': 'Division does not exist'}), 404
         return json.dumps(result.to_dict())
-    except ValueError:
-        return jsonify({'status': 'fail','message': 'Division does not exist'}), 404
+    except Exception:
+        return jsonify({'status': 'fail','message': 'Operation failed'}), 404
 
 @divisions_blueprint.route('/divisions/', methods=['GET'])
 def get_all_divisions():

@@ -5,10 +5,6 @@ import json
 
 teams_blueprint = Blueprint('teams', __name__)
 
-@teams_blueprint.route('/teams/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({'status': 'success','message': 'pong!'})
-
 @teams_blueprint.route('/teams/<team_id>', methods=['GET'])
 def get_team_info(team_id):
     try:
@@ -19,7 +15,7 @@ def get_team_info(team_id):
     except ValueError:
         return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
 
-@teams_blueprint.route('/teams/address/<team_id>', methods=['GET'])
+@teams_blueprint.route('/teams/<team_id>/address', methods=['GET'])
 def get_team_adress(team_id):
     try:
         team = Team.query.filter_by(id=team_id).first()
@@ -43,7 +39,7 @@ def get_club_from_team_id(team_id):
     except ValueError:
         return jsonify({'status': 'fail','message': 'Team does not exist'}), 404
 
-@teams_blueprint.route('/teams/full-team-name/<team_id>', methods=['GET'])
+@teams_blueprint.route('/teams/<team_id>/full-name', methods=['GET'])
 def get_team_name_by_id(team_id):
     try:
         team_object = Team.query.filter_by(id=team_id).first().to_dict()

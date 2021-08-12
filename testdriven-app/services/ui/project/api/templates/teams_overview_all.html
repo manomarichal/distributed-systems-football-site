@@ -50,9 +50,10 @@
         <td> -</td>
         {% endif %}
         <td>{{team.colors}}</td>
-        <td><a style="text-align:center;" href="http://localhost:5001/teams/overview/{{team.id}}">Pagina van {{extra_info[team.id]['full_name']}}</a></td>
+        <td><a style="text-align:center;" href="http://localhost:5001/teams/{{team.id}}/overview">Pagina van {{extra_info[team.id]['full_name']}}</a></td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}

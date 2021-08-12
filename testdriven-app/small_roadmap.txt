@@ -1,11 +1,3 @@
 finishing touches
-- containers uitschakelen maar site werkt (aka 404 pages fixen)
-- all todos
-- vertalen
-- maybe split up clubs/teams
-- manual
-- urls moeten Restful zijn
-- login pagina mooi maken + homepagina
-- user logins genereren voor elk team
-- actually voor paswoorden kijken
-- divisions aanmaken dynamische knoppen
+- disallow non superadmins to make admins
+- cant make new division

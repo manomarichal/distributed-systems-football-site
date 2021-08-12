@@ -3,11 +3,7 @@ import requests
 
 ui_divisions_blueprint = Blueprint('divisions', __name__, template_folder='./templates')
 
-
-# TODO navbar dropdown menu
-# TODO when two teams have the same amount of points you need to look at which team has a higher GD
-# TODO status is now a number, should be full status
-@ui_divisions_blueprint.route('/divisions/overview/<division_id>', methods=['GET', 'POST'])
+@ui_divisions_blueprint.route('/divisions/<division_id>', methods=['GET', 'POST'])
 def show_team_overview(division_id):
     """"Page giving the league table, some statistics and upcoming fixtures for a given division"""
 
@@ -25,15 +21,14 @@ def show_team_overview(division_id):
                                full_names=full_names,
                                team_rankings=team_rankings, statistics=statistics, best_attack=best_attack,
                                best_defense=best_defense, most_clean_sheets=most_clean_sheets)
-    except requests.exceptions.ConnectionError:
-        return jsonify({'status': 'fail', 'message': 'service required by this route is down'}), 404
+    except Exception:
+        return render_template("internal_server_error.html"), 500
 
+@ui_divisions_blueprint.route('/divisions', methods=['GET'])
+def show_all_divisions():
+    try:
+        divisions = requests.get("http://leagues:5000/divisions").json()
+        return render_template("division_overview_all.html", divisions=divisions)
+    except Exception:
+        return render_template("internal_server_error.html"), 500
 
-
-
-
-
-@ui_divisions_blueprint.route('/divisions/overview', methods=['GET'])
-def show_all_teams():
-    response = requests.get(f'http://teams:5000/teams/all').json()
-    return render_template("all_teams_overview.html", teams=response)

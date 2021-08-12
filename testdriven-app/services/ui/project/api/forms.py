@@ -9,9 +9,9 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-class ScoreForm(FlaskForm): # TODO je kan geen nullen invoegen
-    home_score = IntegerField('Goals thuisploeg', validators=[DataRequired(), NumberRange(min=0)])
-    away_score = IntegerField('Goals uitploeg', validators=[DataRequired(), NumberRange(min=0)])
+class ScoreForm(FlaskForm):
+    home_score = IntegerField('Goals thuisploeg', validators=[NumberRange(min=0)])
+    away_score = IntegerField('Goals uitploeg', validators=[NumberRange(min=0)])
     submit = SubmitField('Bevestig')
 
 class ClubForm(FlaskForm):

@@ -22,7 +22,7 @@
 
 </style>
 
-<p class="h1" style="text-align: center">Info club <a style="font-size: 1rem" href="http://localhost:5001/user/edit-club-info">(Pas aan)</a>
+<p class="h1" style="text-align: center">Info club <a style="font-size: 1rem" href="http://localhost:5001/user/club/edit">(Pas aan)</a>
 </p>
 <div class="row" style="padding-left: 15%; padding-right: 15%">
     <div class="col bordered mx-auto">
@@ -53,7 +53,7 @@
     </div>
 </div>
 
-<p class="h1" style="text-align: center">Info team <a style="font-size: 1rem" href="http://localhost:5001/user/edit-team-info">(Pas aan) </a> </p>
+<p class="h1" style="text-align: center">Info team <a style="font-size: 1rem" href="http://localhost:5001/user/team/edit">(Pas aan) </a> </p>
 <div class="row" style="padding-left: 15%; padding-right: 15%">
     <div class="col bordered mx-auto">
         <table class="table center">
@@ -74,7 +74,7 @@
                 {% else %}
                 <td>Geen suffix</td>
                 {% endif %}
-                <td><a href="http://localhost:5001/teams/overview/{{team.id}}">Pagina van {{full_names[id|string]}}</a></td>
+                <td><a href="http://localhost:5001/teams/{{team.id}}/overview">Pagina van {{full_names[id|string]}}</a></td>
             </tr>
             </tbody>
         </table>
@@ -106,7 +106,7 @@
                 {% else %}
                 <td> -</td>
                 {% endif %}
-                <td><a href="http://localhost:5001/user/edit-match/{{match.id}}">Pas aan</a></td>
+                <td><a href="http://localhost:5001/user/match/{{match.id}}/edit">Pas aan</a></td>
             </tr>
             {% set counter.value = counter.value + 1 %}
             {% endfor %}

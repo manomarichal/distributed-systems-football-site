@@ -5,10 +5,6 @@ import json
 
 referees_blueprint = Blueprint('referees', __name__)
 
-@referees_blueprint.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({'status': 'success','message': 'pong!'})
-
 @referees_blueprint.route('/referees/<referee_id>', methods=['GET'])
 def get_referee_by_id(referee_id):
     fail = {'status': 'fail',

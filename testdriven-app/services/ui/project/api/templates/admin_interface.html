@@ -41,11 +41,11 @@
             referees </a>
         <a href="http://localhost:5001/admin/user" class="btn btn-outline-success btn-block" role="button"> Edit
             users </a>
-        <a href="http://localhost:5001/user/admin/referees/assign" class="btn btn-outline-success btn-block"
+        <a href="http://localhost:5001/user/admin/referees/assign" class="btn btn-outline-primary btn-block"
            role="button"> Assign referees to matches </a>
         {% if current_user.is_authenticated %}
-            {% if current_user.admin == True %}
-        <a href="http://localhost:5001/admin/user" class="btn btn-outline-primary btn-block" role="button"> Add or remove
+            {% if current_user.super_admin == True %}
+        <a href="http://localhost:5001/user/super-admin/permissions" class="btn btn-outline-primary btn-block" role="button"> Add or remove
             Admins </a>
             {% endif %}
         {% endif %}

@@ -14,8 +14,11 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None:
             return redirect(url_for('login.login'))
-        login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('misc.show_home'))
+        if user.password == form.password.data:
+            login_user(user, remember=form.remember_me.data)
+            return redirect(url_for('misc.show_home'))
+        else:
+            return redirect(url_for('login.login'))
     else:
         pass
         return render_template('login.html', title='Sign In', form=form)

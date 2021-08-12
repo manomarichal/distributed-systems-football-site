@@ -1,7 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
+<style type="text/css">
+    .h1 {
+        margin-top: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .table {
+        background: white;
+    }
+
+    .btn {
+        background: white;
+    }
+</style>
+
+<div style="padding-left: 25%; padding-right: 25%; text-align: center">
+    <p></p><h1>Log in</h1></p>
+    <div class="col mx-auto">
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -14,4 +34,7 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+    </div>
+</div>
+
 {% endblock %}

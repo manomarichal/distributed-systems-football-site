@@ -81,7 +81,7 @@
                 {% else %}
                 <td> -</td>
                 {% endif %}
-                <td><a href="http://localhost:5001/matches/overview/{{match.id}}">Details wedstrijd</a></td>
+                <td><a href="http://localhost:5001/matches/{{match.id}}/overview">Details wedstrijd</a></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -104,7 +104,7 @@
                 <td>{{ full_names[match.away_team_id|string] }}</td>
                 <td>{{ match.date }}</td>
                 <td>{{ match.time }}</td>
-                <td><a href="http://localhost:5001/matches/overview/{{match.id}}">Details wedstrijd</a></td>
+                <td><a href="http://localhost:5001/matches/{{match.id}}/overview">Details wedstrijd</a></td>
             </tr>
             {% endfor %}
             </tbody>
