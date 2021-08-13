@@ -154,13 +154,16 @@ def get_points_for_teams_in_division(division_id):
     team_rankings = dict()
     matches = Match.query.filter_by(division_id=division_id)
     for match in matches:
-        team_id = match.home_team_id
-        team_rankings.setdefault(team_id, 0)
+        team_rankings.setdefault(match.home_team_id, 0)
+        team_rankings.setdefault(match.away_team_id, 0)
         if match.goals_home_team is not None:
-            if match.goals_home_team > match.goals_away_team:
-                team_rankings[team_id] += 3  # home team wins
-            elif match.goals_home_team == match.goals_away_team:
-                team_rankings[team_id] += 1  # equal
+            if match.goals_home_team == match.goals_away_team:
+                team_rankings[match.home_team_id] += 1  # equal
+                team_rankings[match.away_team_id] += 1  # equal
+            elif match.goals_home_team > match.goals_away_team:
+                team_rankings[match.home_team_id] += 3  # home team wins
+            else:
+                team_rankings[match.away_team_id] += 3  # home team wins
     return jsonify(team_rankings)
 
 @matches_blueprint.route('/matches/track-record/<team_id>', methods=['GET'])

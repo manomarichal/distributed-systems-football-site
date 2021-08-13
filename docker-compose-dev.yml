@@ -13,10 +13,10 @@ services:
   user-interface:
     container_name: ui
     build:
-      context: services/ui
+      context: services/user-interface
       dockerfile: Dockerfile-dev
     volumes:
-      - './services/ui:/usr/src/app'
+      - './services/user-interface:/usr/src/app'
     ports:
       - 5001:5000
     environment:
@@ -29,7 +29,7 @@ services:
   users-db:
     container_name: users-db
     build:
-      context: ./services/ui/project/db
+      context: services/user-interface/project/db
       dockerfile: Dockerfile
     ports:
     - 5435:5432

@@ -23,7 +23,7 @@
         margin-top: 20px;
         margin-left: 100px;
         margin-right: 100px;
-        font-size: 40px;
+        font-size: 30px;
         text-align: center;
     }
 
@@ -78,7 +78,7 @@
                 {% if match.away_team_id == prev_match.home_team_id %}
                 <td>{{ prev_match.goals_home_team }}</td> {% else %} <td>{{ prev_match.goals_away_team }}</td>
                 {% endif %}
-                <td><a href="http://localhost:5001/matches/{{match.id}}/overview">Details wedstrijd</a></td>
+                <td><a href="http://localhost:5001/matches/{{match.id}}">Details wedstrijd</a></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -140,42 +140,8 @@
     </div>
 </div>
 <p class="h1"> Weersvoorspelling volgende week</p>
-<div class="row" style="padding-left: 15%; padding-right: 15%">
-    <div class="col bordered mx-auto">
-        <table class="table center">
-        <thead>
-        <tr style="background:#d9edf7">
-        {% set counter = namespace(value=0)%}
-        {% for day in weather["daily"] if not day == 0 %}
-            {% set counter.value = counter.value + 1 %}
-            {% if counter.value == 1 %}
-                {% continue %}
-            {% endif %}
-            <th id="date{{ counter.value }}" scope="col"></th>
-            <script>
-                var daysOfTheWeek = ["Zondag", "Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"]
-                var today = new Date();
-                today.setDate(today.getDate() + {{ counter.value - 1}});
-                document.getElementById("date" + String({{ counter.value }})).innerHTML = daysOfTheWeek[today.getDay()];
-            </script>
-        {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        {% set counter_two = namespace(value=0)%}
-        {% for day in weather["daily"] %}
-            {% set counter_two.value = counter_two.value + 1 %}
-            {% if counter_two.value == 1 %}
-                {% continue %}
-            {% endif %}
-            {% set icon = day["weather"][0]["icon"] %}
-            <td> <img src="https://openweathermap.org/img/w/{{icon}}.png" alt="pic" /></td>
-        {% endfor %}
-        </tr>
-        </tbody>
-    </table>
-</div>
+<p class="h2" style="text-align: center;"> Openweathermap is refusing the connection, please try again later</p>
+
 </div>
 {% endblock %}
 <script>

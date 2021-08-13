@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, render_template, request
 import requests
 
 ui_matches_blueprint = Blueprint('matches', __name__, template_folder='./templates')
-@ui_matches_blueprint.route('/matches/<match_id>/overview', methods=['GET'])
+@ui_matches_blueprint.route('/matches/<match_id>', methods=['GET'])
 def show_match_overview(match_id):
     try:
         API_KEY = "8d225f3be378ce1b356c39b0810dc696"

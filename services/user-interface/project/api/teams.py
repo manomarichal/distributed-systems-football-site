@@ -4,7 +4,7 @@ import datetime as dt
 
 ui_teams_blueprint = Blueprint('teams', __name__, template_folder='./templates')
 
-@ui_teams_blueprint.route('/teams/<team_id>/overview', methods=['GET'])
+@ui_teams_blueprint.route('/teams/<team_id>', methods=['GET'])
 def show_team_overview(team_id):
     try:
         team = requests.get("http://teams:5000/teams/%s"%team_id).json()
@@ -20,7 +20,7 @@ def show_team_overview(team_id):
     except Exception:
         return render_template("internal_server_error.html"), 500
 
-@ui_teams_blueprint.route('/teams/overview', methods=['GET'])
+@ui_teams_blueprint.route('/teams', methods=['GET'])
 def show_all_teams():
     try:
         teams = requests.get(f'http://teams:5000/teams').json()
