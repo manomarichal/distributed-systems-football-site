@@ -42,7 +42,7 @@ I chose to decompose the entire site into the four following services:
 - referees
 - user-interface
 
-![services_architecture](img/services_architecture.png)
+<img alt="services_architecture" height="200" src="img/services_architecture.png" width="200"/>
 
 I thought it would be best to have one service, `user-interface` do all the rendering, and then split the rest up in three 'data' containers who provide an API to access, perform operations on and update their data. Thus, `user-interface` exclusively does rendering, while the `leagues`, `teams` and `referee` services do the computing and data processing. The `leagues` service provides an API to interact with the data on matches, divisions and statusses of matches, the `teams` service does this for information on clubs and teams, and the `referees` service for data on referees.
 
