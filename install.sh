@@ -1,3 +1,7 @@
+# build & start containers
+sudo docker-compose -f docker-compose-dev.yml up -d --build
+
+# create databases and add data
 sudo docker-compose -f docker-compose-dev.yml run teams python manage.py recreate-db
 sudo docker-compose -f docker-compose-dev.yml run teams python manage.py add-teams-data
 sudo docker-compose -f docker-compose-dev.yml run teams python manage.py add-clubs-data

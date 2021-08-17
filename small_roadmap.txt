@@ -1,4 +1,0 @@
-finishing touches
-- disallow non superadmins to make admins
-- cant make new division
-- show current referee on match specific page

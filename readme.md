@@ -1,14 +1,40 @@
 # Distributed Systems Football League Manual
+This manual has the following parts:
+- Setup
+  - requirements
+  - installation
+- Design choices
+  - Architecture
+    - Teams
+    - Leagues
+    - Referees
+    - User Interface
+  - Extra tools
+- Using the site
+  - League tables, fixtures, statistics
+  - Specific fixtures
+  - Team pages
+  - Accounts and login
+    - Team accounts
+    - Admin
+    - Superadmin
+  - Admin interface
+    - Performing CRUD operations
+    - Assigning referees
+    - Removing/granting admin permissions
+  - Team portal
+  
 ## Setup
 ### Requirements
 - Docker
+- docker-compose
 - Python 3
 
 ### Installing and running
-Run `install.sh`, this should do everything
+Run `install.sh`, this should do everything. You should now be able to acces the site at `http://localhost:5001/`.
 
 ## Design choices
-### Services
+### Architecture
 I chose to decompose the entire site into the four following services:
 
 - teams
@@ -16,10 +42,14 @@ I chose to decompose the entire site into the four following services:
 - referees
 - user-interface
 
-I chose to group things that are closely related. For example the data on status and the data on matches are in the same container, because we only need status data when we are talking about matches, hence making seperate services for them would result in a bunch of extra unnecessary calls without extra functionality. I will now go a little bit deeper on each service and their API. Every service has their own database.
+![services_architecture](img/services_architecture.png)
+
+I thought it would be best to have one service, `user-interface` do all the rendering, and then split the rest up in three 'data' containers who provide an API to access, perform operations on and update their data. Thus, `user-interface` exclusively does rendering, while the `leagues`, `teams` and `referee` services do the computing and data processing. The `leagues` service provides an API to interact with the data on matches, divisions and statusses of matches, the `teams` service does this for information on clubs and teams, and the `referees` service for data on referees.
+
+Furthermore, I chose to group things that are closely related. For example the data on status and the data on matches are available through the same service, because we only need status data when we are talking about matches, hence making seperate services for them would result in a bunch of extra unnecessary calls without extra functionality. 
 
 ### Teams
-This service provides data related to teams and clubs. It is running on port `5003` and has the following endpoints:
+This service provides data related to teams and clubs. It is accessible through port `5003` and has the following endpoints:
 
 - `[GET] /teams/<team_id>`
   - gives information on a single team in JSON
@@ -86,7 +116,7 @@ This service provides data related to matches, divisions and the status of a mat
   - changes the referee of a match
  
 ### Referees
-This service provides data related on referees. It is running on port `5006` and has the following endpoints:
+This service provides data related on referees. It is accessible through port `5006` and has the following endpoints:
 - `[GET] /referees/`
   - returns a JSON containing all info on all referees
 - `[GET] /referees/names`
@@ -94,8 +124,8 @@ This service provides data related on referees. It is running on port `5006` and
 - `[GET] /referees/<referee_id>`
   - returns a JSON containing info on a referee
 
-### User-interface
-This service acts as the frontend of the site. It is running on port `5001` and has the following endpoints:
+### User Interface
+This service acts as the frontend of the site. It is accessible through port `5001` and has the following endpoints:
 - `[GET, POST] /divisions/<division_id>`
 - `[GET] /divisions`
 - `[GET] /matches/<match_id>`
@@ -118,8 +148,22 @@ This service acts as the frontend of the site. It is running on port `5001` and 
 - `[GET] /login`
 - `[GET] /logout`
 
+### Extra tools
+- Flask
+- Flask-SQLAlchemy
+- flask-login
+- flask-wtf
+- flask-admin
+- psycopg2
+- SQLAlchemy
+- SQLAlchemy-serializer
+- requests
+- openweathermap
+- Docker
+- Docker-compose
+
 ## Using the site
-In this section I will list all the required features, explaining how to acces them, and how I handled them.
+In this section I will list all the required features, explaining how to access them, and how I handled them.
 
 ### League tables, fixtures, statistics
 All of those can be found on the division-specific page by navigating to `Divisies`, and then choosing a division. This page gives us at the top under `Rangschikking` a small table with the best offense, best defense and most clean sheets for the division, followed by the league table.
@@ -139,9 +183,9 @@ The league table gives us for each team (in order)
 Below the league table under `Wedstrijden`, we can see a bunch of smaller tables, one for each matchweek containing all matches for that division in that matchweek. In the `Speeldag 1` table for example are all matches from that division for the first matchweek. It is also possible to filter by team name and/or matchweek in the `Filter op team...` and `Filter op speeldag...` input fields respectively. Both fields support autocomplete.
 
 ### Specific fixtures
-Each match has its own specific page containing all info known about the match. The date, kick-off time and referee assigned. Furthermore on the right, a table containing historical statistics from this matchup is included, showing how many times the teams have faced each other, how many times team A has wun against team B and so on. and a weather prediction. Below these tables is a weather table giving the forecast for the next week. Finally, depending on if the match has already been played yet, either the score or the scores of the three most recent games they played against each other will show up below the match information.
+Each match has its own specific page containing all info known about the match. The date, kick-off time and referee assigned. Furthermore on the right, a table containing historical statistics from this match up is included, showing how many times the teams have faced each other, how many times team A has wun against team B and so on. and a weather prediction. Below these tables is a weather table giving the forecast for the next week. Finally, depending on if the match has already been played yet, either the score or the scores of the three most recent games they played against each other will show up below the match information.
 
-These pages can be accessed in multiple ways, the most easiest being to go to a division specific page and then for a match click the `Details wedstrijd` link. 
+These pages can be accessed in multiple ways, the easiest being to go to a division specific page and then for a match click the `Details wedstrijd` link. 
 
 ### Team pages
 Each team has its own specific page as well, which can be found by clicking the `Ploegen` button in the navbar, and then for a team clicking the `Pagina van {team_name}` link in the table. This page contains info about the team, such as the colors, the stam club and suffix (`Geen` means None in English). Furthermore it shows the three most recent matches the team played, and all upcoming games for that team.

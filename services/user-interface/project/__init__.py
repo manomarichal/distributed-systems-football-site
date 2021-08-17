@@ -53,6 +53,13 @@ def create_app(script_info=None):
                 return True if current_user.admin or current_user.super_admin else False
             return False
 
+    class TeamView(AdminOnlyView):
+        column_list = ('id','suffix', 'colors', 'stam_id')
+        column_editable_list = ['id','suffix', 'colors', 'stam_id']
+
+    class ClubView(AdminOnlyView):
+        column_list = ('stam_id','name', 'address', 'zip_code', 'city', 'website')
+
     class AdminUserView(ModelView):
         column_list = ('username', 'team_id')
 
@@ -95,8 +102,8 @@ def create_app(script_info=None):
             __table__ = Table('clubs', teams_metadata, autoload_with=teams_engine)
             can_create = True
 
-        admin.add_view(AdminOnlyView(Team, teams_session))
-        admin.add_view(AdminOnlyView(Club, teams_session))
+        admin.add_view(TeamView(Team, teams_session))
+        admin.add_view(ClubView(Club, teams_session))
     except Exception:
         pass
     
