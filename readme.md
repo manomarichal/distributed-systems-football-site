@@ -110,6 +110,8 @@ This service provides data related to matches, divisions and the status of a mat
   - returns a JSON containing the matches where team 1 played against team 2 and reverse
 - `[GET] /matches/division/<division_id>/statistics`
   - returns a JSON containing statistics about the division 
+- `[GET] /status/full-names`
+  - returns a JSON containing the full names of the different statusses a match can have
 - `[PUT] /matches/<match_id>/score'`
   - replaces the score of a match with the given data
 - `[POST] /matches/<match_id>/referee`

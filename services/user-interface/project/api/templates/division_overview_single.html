@@ -126,7 +126,7 @@
                 <td>{{ full_names[match.home_team_id|string] }}</td>
                 <td>{{ full_names[match.away_team_id|string] }}</td>
                 {% if match.status != None %}
-                <td> {{match.status}}</td>
+                <td> {{status_names[match.status|string]}}</td>
                 {% else %}
                 <td> -</td>
                 {% endif %}

@@ -90,6 +90,11 @@
             <tr style="background:#d9edf7; text-align: center;">
                 <th scope="col">{{ full_names[match.home_team_id|string] }}</th>
                 <th scope="col">{{ full_names[match.away_team_id|string] }}</th>
+                {% if match["referee_id"] == None %}
+                <td style="text-align: center">Nog geen</td>
+                {% else %}
+                <td style="text-align: center">{{referee_names[match["referee_id"]|string]}}</td>
+                {% endif %}
             </tr>
             </thead>
             <tbody>

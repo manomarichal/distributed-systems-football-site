@@ -9,6 +9,7 @@ def show_team_overview(division_id):
 
     try:
         full_names = requests.get("http://teams:5000/teams/full-names").json()
+        status_names = requests.get("http://leagues:5000/status/full-names").json()
         division = requests.get("http://leagues:5000/divisions/%s" % division_id).json()
         matches_by_week = requests.get("http://leagues:5000/matches/division/%s/per-week" % division_id).json()
         statistics = requests.get("http://leagues:5000/matches/division/%s/statistics" % division_id).json()
@@ -20,7 +21,7 @@ def show_team_overview(division_id):
         return render_template("division_overview_single.html", division=division, matches_by_week=matches_by_week,
                                full_names=full_names,
                                team_rankings=team_rankings, statistics=statistics, best_attack=best_attack,
-                               best_defense=best_defense, most_clean_sheets=most_clean_sheets)
+                               best_defense=best_defense, most_clean_sheets=most_clean_sheets, status_names=status_names)
     except Exception:
         return render_template("internal_server_error.html"), 500
 

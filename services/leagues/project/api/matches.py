@@ -2,7 +2,7 @@ import datetime
 
 import requests
 from flask import Blueprint, jsonify, request
-from project.api.models import Match
+from project.api.models import Match, Status
 from project import db
 from sqlalchemy import func, and_, or_, desc
 import json
@@ -267,3 +267,11 @@ def update_referee(match_id):
     match.referee_id = int(data.get("new_id")) if data.get("new_id") != "None" else None
     db.session.commit()
     return jsonify({'status' : 'succes'}), 200
+
+@matches_blueprint.route('/status/full-names', methods=['GET'])
+def get_all_team_names():
+    names = dict()
+    result = Status.query.all()
+    for status in result:
+        names[status.id] = status.status_name
+    return jsonify(names), 200

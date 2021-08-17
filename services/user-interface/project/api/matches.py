@@ -20,18 +20,19 @@ def show_match_overview(match_id):
         return render_template("internal_server_error.html"), 500
 
     # weather
-    weather = requests.get("https://api.openweathermap.org/data/2.5/onecall?lat=51.21989&lon=4.40346&exclude=current,minutely,hourly,alerts&appid=" + API_KEY).json()
-    return render_template("match_overview.html", weather=weather, match=match, full_names=full_names,
-                           home_team_track_record=home_team_tr, away_team_track_record=away_team_tr,
-                           statistics=statistics, prev_matches=prev_matches, address=home_team_adress,
-                           referee_names = referee_names)
-    # except requests.exceptions.ConnectionError:
-    #     return render_template("match_overview_no_weather.html", match=match, full_names=full_names,
-    #                            home_team_track_record=home_team_tr, away_team_track_record=away_team_tr,
-    #                            statistics=statistics, prev_matches=prev_matches, address=home_team_adress,
-    #                            referee_names=referee_names)
-    # except Exception:
-    #     return render_template("internal_server_error.html"), 500
+    try:
+        weather = requests.get("https://api.openweathermap.org/data/2.5/onecall?lat=51.21989&lon=4.40346&exclude=current,minutely,hourly,alerts&appid=" + API_KEY).json()
+        return render_template("match_overview.html", weather=weather, match=match, full_names=full_names,
+                               home_team_track_record=home_team_tr, away_team_track_record=away_team_tr,
+                               statistics=statistics, prev_matches=prev_matches, address=home_team_adress,
+                               referee_names = referee_names)
+    except requests.exceptions.ConnectionError:
+        return render_template("match_overview_no_weather.html", match=match, full_names=full_names,
+                               home_team_track_record=home_team_tr, away_team_track_record=away_team_tr,
+                               statistics=statistics, prev_matches=prev_matches, address=home_team_adress,
+                               referee_names=referee_names)
+    except Exception:
+        return render_template("internal_server_error.html"), 500
 
 @ui_matches_blueprint.route('/user/super-admin/logins', methods=['GET'])
 @login_required
